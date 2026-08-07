@@ -36,8 +36,9 @@ const mono = Geist_Mono({
 const description = `${profile.positioning} ${profile.subline}`;
 
 export const metadata: Metadata = {
-  // TODO: change to your real domain so OpenGraph URLs resolve.
-  metadataBase: new URL("https://neeraj.dev"),
+  // The live deployment. OpenGraph/Twitter image URLs are resolved against
+  // this, so a wrong value here silently breaks every link preview.
+  metadataBase: new URL("https://neerajreddy.vercel.app"),
   title: {
     default: `${profile.name} — Computer Vision & ML`,
     template: `%s · ${profile.shortName}`,
