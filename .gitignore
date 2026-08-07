@@ -30,11 +30,31 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# ---- secrets ---------------------------------------------------------
+# Every .env file is ignored. RESEND_API_KEY lives in .env.local and must
+# never be committed — if you ever need to check, run:
+#     git check-ignore -v .env.local
 .env*
+# ...except the example, which documents which keys are needed without
+# holding any real values.
+!.env.example
 
 # vercel
 .vercel
+
+# firebase — deploy artifacts and the local emulator/runtime config, which
+# can contain service-account details.
+.firebase/
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*
+.runtimeconfig.json
+
+# editors / OS
+.vscode/
+.idea/
+*.swp
+Thumbs.db
 
 # typescript
 *.tsbuildinfo
