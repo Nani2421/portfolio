@@ -1,26 +1,448 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ============================================================================
+   Design system.
+
+   The starting point was cognition.com, but the identifiably-theirs parts have
+   been replaced so this is its own thing rather than a copy:
+
+   - Their drawn full-height column rules are gone. The structural motif here is
+     an annotation frame — corner ticks and a bracketed mono index, which is a
+     bounding box, which is what the work on this site is actually about.
+   - The palette is warm-paper and deep teal, not their cool off-white and
+     electric blue, and the near-black is warm (#14110d) rather than pure #000.
+   - There is a dark mode. Theirs is light-only.
+
+   What is kept is ordinary design vocabulary, not anyone's property: a warm
+   light ground, serif body under sans headings, hairline rules, zero radius,
+   fixed-px type, and restrained motion.
+   ========================================================================= */
+
+@theme {
+  /* ---- Palette --------------------------------------------------------
+     Light only. There is deliberately no dark variant — the source site has
+     none, and the whole character depends on the warm paper ground.        */
+  --color-page: #f6f4ef;
+  --color-surface: #fffefb;
+  --color-raised: #fffefb;
+  --color-overlay: #efece4;
+
+  /* Every hairline on the site. 6% black is light enough to read as paper
+     texture and dark enough to survive a cheap panel. */
+  --color-line: rgba(20, 17, 13, 0.10);
+  --color-line-strong: rgba(20, 17, 13, 0.20);
+
+  --color-fg: #14110d;
+  --color-muted: rgba(20, 17, 13, 0.62);
+  --color-faint: rgba(20, 17, 13, 0.42);
+
+  /* Deep teal. Used for the active nav item, link floods and section ticks and
+     almost nothing else — its force comes entirely from scarcity. */
+  --color-accent: #0b5d51;
+  --color-accent-deep: #084840;
+  /* Reserved strictly for live/in-progress states. */
+  --color-signal: #fa5050;
+
+  /* The skills game runs on its own orange rather than the site accent. It is
+     the one playful thing on the page and the electric blue made it read as
+     another piece of UI chrome; orange separates it without leaving the warm
+     ground the palette is built on. */
+  --color-play: #e8590c;
+  --color-play-soft: #f59f00;
+
+  /* Buttons are near-black, so they sit slightly back from the text they
+     appear beside. */
+  --color-button: #241f18;
+
+  /* Star-field opacity. Not a colour — the stars paint in --color-fg, which
+     already inverts — but light dots on a dark ground read far fainter than
+     dark dots on a light one, so the alpha has to be set per theme.
+     Raised twice from 0.2: at that value they were indistinguishable from
+     paper texture on a bright screen.
+
+     --star-size multiplies the radius for the same reason. A dark dot on
+     paper needs real area before the eye catches it, whereas a light dot on
+     near-black is caught by contrast alone and looks like grit if enlarged.
+     The colour itself is not a lever here: --color-fg is #14110d, so "deeper
+     black" would be a change of about 8% on one channel. */
+  --star-alpha: 0.5;
+  --star-size: 1.7;
+
+  /* ---- Type -----------------------------------------------------------
+     The source uses NB International Pro (Neubau) and STK Bureau Serif, both
+     commercial. Geist and Source Serif 4 are the closest free equivalents —
+     same neo-grotesque temperature, same transitional-serif warmth.
+     These reference the next/font variables set on <html>, so this block must
+     live on the same element as those classNames.                          */
+  --font-heading: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-source-serif), Georgia, serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  /* ---- Type scale -----------------------------------------------------
+     Fixed pixels, no clamp, no vw — that discipline is kept, because a
+     viewport-scaled hero is what makes a site read as a template.
+
+     But the sizes are ours, not the source's. Cognition tops out at a 36px
+     h1, which works when the page is a company statement surrounded by
+     product proof. A portfolio hero has to introduce a person and carry the
+     page on its own, so this scale runs to 52px and the body sits at 17px
+     rather than 16px for longer reading.                                    */
+  --text-meta: 0.75rem; /* 12px — mono metadata, dates, section labels */
+  --text-small: 0.8125rem; /* 13px */
+  --text-body: 1.0625rem; /* 17px */
+  --text-lead: 1.25rem; /* 20px */
+  --text-h3: 1.25rem; /* 20px */
+  --text-h2: 1.5rem; /* 24px */
+  --text-h1: 2rem; /* 32px */
+  --text-display: 2.5rem; /* 40px */
+  --text-hero: 3.25rem; /* 52px */
+
+  /* ---- Easing ---------------------------------------------------------
+     Two curves only. The aggressive expo-out from the previous system is
+     gone: here motion is meant to be barely perceptible.                   */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+
+  /* ---- Rhythm ---------------------------------------------------------
+     Both of these are overridden at the md breakpoint below. Tailwind emits
+     `var(--spacing-section)` into the utility, so redefining the custom
+     property in a media query genuinely changes the computed value.
+
+     120px rather than the source's 180px. That much air works when a section
+     is one sentence and a logo wall; with project rows and case-study prose
+     it just reads as dead space between things you want compared.          */
+  --spacing-section: 4.5rem; /* 72px, mobile */
+  --spacing-gutter: 1.5rem; /* 24px, mobile page margin */
+
+  /* 1312px content band inside 64px margins, split into 15 columns of
+     87.47px. Content sits in columns 5–13 = 787px — wider than the source's
+     612px, because project rows, the skills game and the architecture
+     diagrams all need room the source's pure-prose column never had.
+     `--container-read` keeps long prose at a comfortable measure inside it. */
+  --container-site: 82rem; /* 1312px */
+  --container-read: 44rem; /* 704px */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@media (min-width: 768px) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --spacing-section: 7.5rem; /* 120px */
+    --spacing-gutter: 4rem; /* 64px */
   }
 }
 
+/* ---- Dark mode -------------------------------------------------------
+   Driven by `data-theme` on <html>, set before first paint by the inline
+   script in layout.tsx. Only the colour tokens are redefined — every
+   component reads them, so nothing else in the codebase knows this exists.
+
+   Not a straight inversion: the ground is a warm near-black rather than a
+   flipped grey, the accent lightens (a deep teal on near-black is invisible),
+   and the hairlines go to white at a *higher* alpha than the black ones,
+   because light-on-dark hairlines read fainter at equal opacity. */
+:root[data-theme="dark"] {
+  --color-page: #14120f;
+  --color-surface: #1c1a16;
+  --color-raised: #1c1a16;
+  --color-overlay: #242119;
+
+  --color-line: rgba(255, 250, 240, 0.13);
+  --color-line-strong: rgba(255, 250, 240, 0.26);
+
+  --color-fg: #f4f1ea;
+  --color-muted: rgba(244, 241, 234, 0.62);
+  --color-faint: rgba(244, 241, 234, 0.42);
+
+  --color-accent: #4ecbb4;
+  --color-accent-deep: #7fdcc9;
+
+  --color-play: #ff7a33;
+  --color-play-soft: #ffc94d;
+
+  --color-button: #f4f1ea;
+
+  /* This is the night sky, so: brighter, and left small and sharp. */
+  --star-alpha: 0.55;
+  --star-size: 1;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Only colour transitions on a theme flip — transitioning everything makes
+   the whole page lurch. */
+:root[data-theme] body,
+:root[data-theme] body * {
+  transition:
+    background-color 0.2s var(--ease-standard),
+    border-color 0.2s var(--ease-standard),
+    color 0.2s var(--ease-standard);
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-page);
+  color: var(--color-fg);
+  /* The document default is the SERIF. Sans is reserved for headings and UI
+     chrome — inverting this is the most distinctive choice in the system. */
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Tailwind's preflight sets `margin: 0` on every element, which silently
+   breaks <dialog>: the native centring of a modal dialog is implemented as
+   `margin: auto`, so without this it pins itself to the top-left corner. */
+dialog {
+  margin: auto;
+  max-height: calc(100dvh - 4rem);
+  overflow-y: auto;
+}
+
+/* Zero-radius system. The source bundle has three non-zero radius values in
+   85KB of CSS; treating it as an absolute is closer than trying to curate
+   exceptions. Inputs need the !important to beat UA styles. */
+*,
+*::before,
+*::after {
+  border-radius: 0;
+}
+input,
+textarea,
+select,
+button {
+  border-radius: 0 !important;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-page);
+}
+
+/* ---- Headings --------------------------------------------------------
+   Sans, single weight, modest negative tracking. Nothing here is bold: the
+   source loads NB International at 400 only, and weight contrast is carried
+   by the serif/sans switch instead. */
+.display {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+/* Smaller headings need less correction — tracking scales with size. */
+.display-sm {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Section labels and metadata. Mono, 12px, sentence case — the source never
+   shouts in all-caps, and adding tracking here would read as a different
+   (more brutalist) system entirely. */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: -0.01em;
+  color: var(--color-muted);
+}
+
+/* The editorial section number that sits in the left gutter. */
+.section-no {
+  font-family: var(--font-body);
+  font-size: 0.625rem; /* 10px */
+  color: var(--color-faint);
+}
+
+.measure {
+  max-width: var(--container-read);
+}
+
+/* ---- Annotation frame -----------------------------------------------
+   The structural motif, replacing the drawn column rules this design started
+   from. Corner ticks in the accent, drawn like a detection bounding box —
+   which is the thing half the projects on this site are about, so it is the
+   one ornament here that is actually earned.
+
+   Applied always-on to section headers, and on hover to project rows. */
+.annot {
+  position: relative;
+}
+.annot::before,
+.annot::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-color: var(--color-accent);
+  pointer-events: none;
+}
+.annot::before {
+  top: 0;
+  left: 0;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+.annot::after {
+  bottom: 0;
+  right: 0;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
+/* Hover variant for rows: the brackets snap in rather than fade, the way an
+   annotation overlay appears on a frame. */
+.annot-hover::before,
+.annot-hover::after {
+  opacity: 0;
+  transition: opacity 0.15s var(--ease-standard);
+}
+.annot-hover:hover::before,
+.annot-hover:hover::after {
+  opacity: 1;
+}
+
+/* ---- Links -----------------------------------------------------------
+   Body links are underlined in flow, the way a document does it — no
+   animated reveal. The underline starts faint and resolves on hover. */
+.link-underline {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: color-mix(in srgb, currentColor 30%, transparent);
+  transition: text-decoration-color 0.25s var(--ease-standard);
+}
+.link-underline:hover {
+  text-decoration-color: currentColor;
+}
+
+/* The one flourish in the whole system: hovering floods the text background
+   with the accent and flips the text to white. It lands precisely because
+   everything around it is so quiet — do not add a second one. */
+.link-flood {
+  display: inline-block;
+  padding: 1px 4px;
+  margin: -1px -4px;
+  transition:
+    background-color 0.25s var(--ease-standard),
+    color 0.25s var(--ease-standard);
+}
+.link-flood:hover {
+  background: var(--color-accent);
+  color: var(--color-page);
+}
+
+/* Rows that respond to the pointer do it with a 2–6% black wash and nothing
+   else. No lift, no scale, no shadow. */
+.row-hover {
+  transition: background-color 0.25s var(--ease-standard);
+}
+.row-hover:hover {
+  background: color-mix(in srgb, var(--color-fg) 3%, transparent);
+}
+
+/* ---- Motion ----------------------------------------------------------
+   Travel distances of 4px and 6px, taken from the source's only two
+   keyframes. Anything further reads as a template. */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.rise-in {
+  animation: rise-in 0.36s var(--ease-out-expo) both;
+}
+
+/* ---- View Transitions ------------------------------------------------
+   Kept, but the 60px slide from the previous system is far too much movement
+   for this one. 6px, matching the in-page motion. */
+::view-transition {
+  /* Without this the overlay swallows clicks mid-transition. */
+  pointer-events: none;
+}
+
+::view-transition-old(.nav-forward) {
+  --slide-offset: -6px;
+  animation:
+    120ms ease-in both fade reverse,
+    260ms var(--ease-out-expo) both slide reverse;
+}
+::view-transition-new(.nav-forward) {
+  --slide-offset: 6px;
+  animation:
+    200ms ease-out 120ms both fade,
+    260ms var(--ease-out-expo) both slide;
+}
+::view-transition-old(.nav-back) {
+  --slide-offset: 6px;
+  animation:
+    120ms ease-in both fade reverse,
+    260ms var(--ease-out-expo) both slide reverse;
+}
+::view-transition-new(.nav-back) {
+  --slide-offset: -6px;
+  animation:
+    200ms ease-out 120ms both fade,
+    260ms var(--ease-out-expo) both slide;
+}
+
+@keyframes slide {
+  from {
+    translate: var(--slide-offset);
+  }
+  to {
+    translate: 0;
+  }
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Anchor the sidebar so it doesn't ride along with the page slide. */
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+::view-transition-old(site-header) {
+  display: none;
+}
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+/* ---- Reduced motion --------------------------------------------------
+   Positional movement is the vestibular trigger, so slides are dropped and
+   crossfades kept. React's <ViewTransition> does no automatic handling —
+   this is required. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
 }
