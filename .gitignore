@@ -59,3 +59,8 @@ Thumbs.db
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Agent instruction files. `next dev` regenerates AGENTS.md on every start, so
+# these stay local rather than in the published repo.
+AGENTS.md
+CLAUDE.md
