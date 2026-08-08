@@ -56,11 +56,11 @@ export default function Nav() {
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
-          {items.slice(1).map((item) => (
+          {items.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              transitionTypes={["nav-forward"]}
+              transitionTypes={[item.exact ? "nav-back" : "nav-forward"]}
               style={HEADING}
               className={`text-[15px] transition-colors ${
                 isActive(item.href, item.exact)
