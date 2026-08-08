@@ -15,6 +15,12 @@ import type { Project } from "@/data/portfolio";
  * Sans for the title, serif for the description, mono for the metadata. That
  * three-way split carries the hierarchy now that there is no weight contrast
  * to lean on.
+ *
+ * The whole row is clickable, but the repo link has to be clickable too, and
+ * an <a> cannot nest inside a <Link>. So the row is a plain <div> and the
+ * case-study link is an absolutely-positioned overlay; the repo link sits
+ * above it on z-10. Hovering a child still hovers the wrapper, so `row-hover`
+ * and the `annot-hover` brackets behave exactly as before.
  */
 export default function ProjectCard({
   project,
@@ -24,11 +30,14 @@ export default function ProjectCard({
   index: number;
 }) {
   return (
-    <Link
-      href={`/work/${project.slug}`}
-      transitionTypes={["nav-forward"]}
-      className="annot annot-hover row-hover -mx-3 block border-b border-line px-3 py-6"
-    >
+    <div className="annot annot-hover row-hover relative -mx-3 border-b border-line px-3 py-6">
+      <Link
+        href={`/work/${project.slug}`}
+        transitionTypes={["nav-forward"]}
+        aria-label={`${project.title} — read the case study`}
+        className="absolute inset-0"
+      />
+
       <div className="grid gap-x-10 gap-y-3 md:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)]">
         <div>
           <div className="flex items-baseline gap-3">
@@ -54,8 +63,36 @@ export default function ProjectCard({
           <p className="mt-2 font-mono text-meta text-faint">
             {project.stack.slice(0, 5).join(", ")}
           </p>
+
+          {/* Only rendered when the résumé actually links a repo. Projects
+              without one stay exactly as they were — no dead or invented
+              links. z-10 lifts it clear of the case-study overlay above. */}
+          {(project.repo || project.demo) && (
+            <p className="relative z-10 mt-3 flex flex-wrap gap-x-5 gap-y-1 font-mono text-meta">
+              {project.repo && (
+                <a
+                  href={project.repo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="link-underline text-accent"
+                >
+                  Code ↗
+                </a>
+              )}
+              {project.demo && (
+                <a
+                  href={project.demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="link-underline text-accent"
+                >
+                  Live demo ↗
+                </a>
+              )}
+            </p>
+          )}
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
