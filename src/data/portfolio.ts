@@ -93,7 +93,6 @@ export const skillTokens: SkillToken[] = [
   { label: "Kotlin", short: "Kt" },
   { label: "MySQL", short: "SQL" },
   { label: "Django", short: "Dj" },
-  { label: "TensorFlow", short: "TF" },
   { label: "AWS", short: "AWS" },
   { label: "Git", short: "Git" },
   { label: "AI", short: "AI" },
