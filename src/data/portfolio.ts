@@ -47,10 +47,10 @@ export const capabilities = [
     proof: "anpr",
   },
   {
-    claim: "Transfer-learned a CNN to 87% on a classification task",
+    claim: "Built a RAG pipeline that is allowed to say no",
     detail:
-      "VGG16 backbone, frozen features, retrained head — chosen so training fit in a Colab session.",
-    proof: "plant-disease",
+      "Hybrid dense + BM25 retrieval fused by RRF, cross-encoder reranking, and a relevance floor that returns nothing rather than guessing — over eight policy PDFs, cited to the page.",
+    proof: "policymind",
   },
   {
     claim: "Shipped a full-stack app against a paid generative API",
@@ -70,8 +70,10 @@ export const capabilities = [
  * Tokens the snake eats on the landing page.
  *
  * `learning: true` marks the ones that are study tracks rather than shipped
- * work — they render as outlined tokens with a legend, so the game can show
- * RAG and NLP without implying a project exists behind them.
+ * work — they render as outlined tokens with a legend, so a skill can appear
+ * without implying a project exists behind it. RAG, vector search and LLMs
+ * came off that list when PolicyMind shipped; NLP stays on it, because using
+ * pretrained encoders is not the same as building the models.
  */
 export type SkillToken = {
   label: string;
@@ -98,9 +100,10 @@ export const skillTokens: SkillToken[] = [
   { label: "Machine Learning", short: "ML" },
   { label: "Deep Learning", short: "DL" },
   { label: "Computer Vision", short: "CV" },
+  { label: "RAG", short: "RAG" },
+  { label: "Vector Search", short: "Vec" },
+  { label: "LLMs", short: "LLM" },
   { label: "NLP", short: "NLP", learning: true },
-  { label: "RAG", short: "RAG", learning: true },
-  { label: "LLMs", short: "LLM", learning: true },
 ];
 
 export type Decision = {
@@ -266,79 +269,105 @@ export const projects: Project[] = [
     next: "Two things, in order. First, filter the road detector's output by class before it reaches the tracker — it was trained on all 15 IDD classes and the pipeline currently feeds every detection through, so pedestrians and traffic signs get tracked and searched for number plates they cannot have. That is free compute back for a one-line change. Second, finish training the road detector: 42.4% mAP@50 is seven epochs of a hundred-epoch schedule, cut short by Colab disconnects, and the gap between it and the plate model at 98.3% is entirely a budget artefact rather than anything about the problem. After both, the per-track majority vote — OCR on the best few frames of a track, confidence-weighted — is what I would add before claiming an end-to-end accuracy number at all.",
   },
   {
-    slug: "plant-disease",
-    title: "Plant Disease Detection",
-    what: "Leaf-image disease classifier with a fertilizer recommendation on top.",
-    period: "May 2024",
-    status: "Coursework",
-    domain: "Deep Learning",
+    slug: "policymind",
+    title: "PolicyMind AI",
+    what: "A policy assistant that answers across a corpus of PDFs and cites the page.",
+    period: "Aug 2026",
+    status: "Prototype",
+    domain: "Retrieval-Augmented Generation",
     role: "Sole author",
-    stack: ["Python", "TensorFlow", "VGG16", "CNN", "Roboflow", "Google Colab"],
+    stack: [
+      "Python",
+      "ChromaDB",
+      "Gemini 2.5 Flash",
+      "sentence-transformers",
+      "BM25",
+      "Streamlit",
+    ],
+    repo: "https://github.com/Nani2421/PolicyMind-AI",
     featured: true,
     outcome:
-      "87% accuracy classifying plant disease from a leaf image, using a frozen VGG16 backbone so the whole thing trained inside a single free Colab session.",
+      "Answers questions across eight company policy PDFs — 80 pages — and cites the document and page behind every claim. The part worth pointing at is not that it answers: it is that a relevance floor lets it return nothing, so “the documents don’t specify that” is a real output rather than a failure mode.",
     tldr: [
-      "Transfer learning on VGG16 — frozen convolutional base, retrained classifier head.",
-      "87% classification accuracy across the disease classes.",
-      "Diagnosis maps to a fertilizer and soil-type recommendation, so the output is an action rather than a label.",
+      "Hybrid retrieval — dense vectors in ChromaDB and BM25 keyword search over the same chunks, fused by Reciprocal Rank Fusion rather than a weighted score blend.",
+      "A cross-encoder reranks the fused top 10 down to 5; anything scoring under the floor is dropped before the model ever sees it.",
+      "Follow-ups are rewritten into standalone questions first, so “what about contractors?” retrieves something instead of nothing.",
+      "Citations come from chunk metadata, not from asking the LLM where it read something.",
     ],
     problem:
-      "Training a convolutional classifier from scratch needs more labelled images and more GPU-hours than a student project has. The real constraint was never the architecture — it was that any approach requiring days of training was simply not available to me. Transfer learning is the answer to that constraint specifically: reuse features somebody else paid to learn, and spend your budget only on the last layer.",
+      "A policy assistant that always produces an answer is worse than one that sometimes declines, because the person asking cannot tell the two cases apart. Everything hard about this project is on the retrieval side: pure embedding search is strong on paraphrase and weak on the exact tokens policy documents turn on — a clause number, an acronym, a defined term — and by the time weak context reaches the model, the model will use it. So the design question was never “which LLM” but “what is allowed to reach it”.",
     constraints: [
-      "Free Colab sessions — training had to survive a runtime disconnect, so it had to be short.",
-      "A modest labelled dataset, curated through Roboflow.",
-      "Output needed to be actionable for a non-technical user, not just a class index.",
+      "Eight policy PDFs, 80 pages. Small enough that I can tell a wrong answer from a right one by hand, which is what makes it a workable corpus to build against.",
+      "Free Gemini tier — cost is per request, so the filtering has to happen in retrieval rather than by stuffing a large context and hoping.",
+      "Runs locally on CPU. Embeddings, BM25 and the cross-encoder all have to be small enough to be interactive without a GPU.",
     ],
     architecture: {
       nodes: [
-        { id: "img", label: "Leaf image", sub: "field photo" },
-        { id: "pre", label: "Resize + normalize", sub: "VGG16 input spec" },
-        { id: "vgg", label: "VGG16 conv base", sub: "frozen, ImageNet weights" },
-        { id: "head", label: "Classifier head", sub: "trained from scratch" },
-        { id: "cls", label: "Disease class", sub: "87% accuracy" },
-        { id: "rec", label: "Fertilizer + soil lookup" },
+        { id: "pdfs", label: "8 policy PDFs", sub: "80 pages" },
+        { id: "chunk", label: "Chunk per page", sub: "50 words, 10 overlap" },
+        { id: "embed", label: "Embed", sub: "all-MiniLM-L6-v2" },
+        { id: "chroma", label: "ChromaDB", sub: "persistent, page metadata" },
+        { id: "hybrid", label: "Dense + BM25 → RRF", sub: "top 10" },
+        { id: "rerank", label: "Cross-encoder rerank", sub: "top 5, score floor" },
+        { id: "gemini", label: "Gemini 2.5 Flash", sub: "grounded prompt" },
+        { id: "ans", label: "Answer + citations", sub: "document and page" },
       ],
       caption:
-        "Only the head is trained. Freezing the base is what turned a multi-day job into a single-session one.",
+        "The first five stages optimise recall. Only the reranker and the floor optimise precision — they are the whole difference between a cited answer and a confident wrong one.",
     },
     decisions: [
       {
-        decision: "VGG16 as the frozen backbone.",
-        alternatives: "ResNet50, EfficientNet, MobileNet, or training from scratch.",
-        why: "VGG16's uniform architecture makes the freeze boundary obvious and its ImageNet features transfer well to leaf texture and lesion patterns, which are exactly the kind of local texture cues ImageNet teaches. Newer backbones score better on ImageNet but the difference did not survive to this task at this dataset size — and VGG16's simplicity mattered more than a point of accuracy when debugging on a free runtime.",
-      },
-      {
-        decision: "Freeze the convolutional base entirely rather than fine-tuning the top blocks.",
+        decision:
+          "Hybrid dense + BM25 retrieval, fused with Reciprocal Rank Fusion.",
         alternatives:
-          "Unfreeze the last convolutional block and fine-tune at a low learning rate.",
-        why: "With a dataset this size, unfreezing invites overfitting and costs training time I did not have. Fine-tuning is the correct next move once there is more data — but only then.",
+          "Dense vectors alone, or a weighted blend of cosine similarity and BM25 score.",
+        why: "Embeddings are good at paraphrase and bad at exact tokens — a clause number or a defined term is semantically uninformative but lexically decisive, which is precisely what BM25 is good at. The two are complementary rather than redundant. RRF fuses by rank instead of score on purpose: cosine similarity and BM25 scores live on different, unbounded scales, so any weighted blend needs its weights retuned whenever the corpus changes. Rank has no units, so it needs no tuning.",
       },
       {
-        decision: "Ship a recommendation layer, not just a classifier.",
-        alternatives: "Return the disease class and stop.",
-        why: "A farmer cannot act on 'Tomato — Septoria leaf spot'. Mapping the diagnosis to a fertilizer and soil type is a deterministic lookup, not ML, and it is what makes the model's output useful. It also forced me to be honest about which classes the model confuses, since a confident wrong diagnosis produces a confidently wrong recommendation.",
+        decision: "Rerank with a cross-encoder instead of trusting the retriever's order.",
+        alternatives:
+          "Raise top-k and let the model sort out what is relevant from a larger context.",
+        why: "A bi-encoder embeds the question and the chunk separately, so it can only ask whether they are about the same topic. A cross-encoder reads both together and can ask whether this chunk answers this question, which is a different and harder question — and the one that matters. It is far too expensive to run over the whole corpus, which is exactly why it belongs after retrieval rather than instead of it: 10 pairs is affordable, 10,000 would not be.",
+      },
+      {
+        decision:
+          "A hard relevance floor that is allowed to return zero chunks.",
+        alternatives: "Always pass the top 5 through, whatever they scored.",
+        why: "The failure mode of a policy assistant is not a missing answer, it is a fluent wrong one — someone acts on it. If the best chunk available is weak, passing it anyway hands the model material it will dutifully use. Dropping it means the honest answer survives to the user. This is the one decision in the project I would defend hardest, because it makes the demo look worse and the system behave better.",
+      },
+      {
+        decision: "Rewrite follow-up questions into standalone ones before retrieval.",
+        alternatives:
+          "Embed the raw follow-up, or concatenate the whole conversation into the query.",
+        why: "“What about contractors?” carries almost no retrievable signal by itself — the noun it depends on is three turns back. Concatenating the history instead drags every earlier topic into the query vector and blurs it. One extra call that resolves the pronouns turns an unretrievable question into a retrievable one, and it only runs when there is history to resolve.",
       },
     ],
     broke: [
       {
-        what: "The gap between benchmark accuracy and a photo taken on a phone. Curated dataset images are well-lit, centred, and shot against clean backgrounds. Real field photos are none of those.",
-        fix: "Partly mitigated with augmentation — rotation, brightness, and crop jitter — to push the training distribution toward field conditions. This is a real, unresolved limitation, not a solved problem, and it is the honest caveat on the 87%.",
+        what: "Chunks are 50 words with a 10-word overlap, cut inside each page. That is precise for retrieval and wrong for policy prose: a rule and its exception routinely land in different chunks, and retrieving only the first gives an answer that is correctly cited and still wrong.",
+        fix: "Partly covered by returning up to five chunks and instructing the model to combine them rather than answer from one. That reduces the failure, it does not remove it — the real fix is structure-aware chunking that splits on clause boundaries instead of a word count, and I have not built it.",
       },
       {
-        what: "Visually similar diseases across different crops were the bulk of the error, rather than errors being spread evenly.",
-        fix: "Treated it as a data problem rather than an architecture one — the confusable pairs need more examples, not a bigger model.",
+        what: "Reranked results were repeatedly several chunks off the same page, which crowded the other seven documents out of the context entirely.",
+        fix: "Deduplicate on (source, page) after reranking and before truncating to five, so the context spans pages rather than restating one.",
+      },
+      {
+        what: "The relevance floor is a magic number. It sits on the cross-encoder's raw logit scale, which has no calibrated meaning, and I picked it by watching scores on questions I already knew the answers to.",
+        fix: "Unresolved, and named here rather than hidden: it is tuned to this corpus and this reranker, and changing either invalidates it. Calibrating it properly needs a labelled question set, which is the same thing missing from the measurements below.",
       },
     ],
     results: [
-      { label: "Classification accuracy", value: "87%", note: "held-out split" },
-      { label: "Backbone", value: "VGG16", note: "ImageNet, frozen" },
-      { label: "Trainable layers", value: "Head only" },
+      { label: "Corpus", value: "8 PDFs", note: "80 pages, indexed page-wise" },
+      { label: "Retrieval", value: "Hybrid", note: "dense + BM25, fused by RRF" },
+      { label: "Reranker", value: "Cross-encoder", note: "top 10 → top 5" },
+      { label: "Context sent", value: "≤ 5 chunks", note: "deduplicated by page" },
     ],
     needsMeasurement: [
-      "Per-class precision and recall — the confusable pairs are the interesting part",
-      "Accuracy on phone photos vs. the curated split, which is the claim worth making",
+      "Answer accuracy over a labelled question set — there isn’t one, so every retrieval decision here is currently justified by argument rather than by measurement",
+      "Recall@5 for hybrid versus dense-only retrieval on the same questions, which is the claim the RRF decision actually rests on",
+      "How often the relevance floor rejects a question the documents do answer — the cost side of that tradeoff is entirely unmeasured",
     ],
-    next: "The benchmark-versus-reality gap is the whole story of this project and I would lead with it next time. Collecting even a small set of genuine phone photos and reporting accuracy on both distributions would say more about the model than another point on the curated split ever could.",
+    next: "The evaluation set, before anything else. Thirty questions with known answers and known source pages would convert most of this page from reasoning into evidence, and would let the relevance floor be chosen rather than guessed. After that, chunking on clause boundaries instead of a fixed word count — it is the largest remaining source of confidently-cited wrong answers, and no amount of reranking fixes a chunk that was split in the wrong place.",
   },
   {
     slug: "pingdrop",
@@ -534,8 +563,8 @@ export const certifications = [
 /** Learning tracks. Deliberately not mixed in with delivered work. */
 export const focusAreas = [
   {
-    title: "Retrieval-augmented generation",
-    body: "Chunking and embedding strategy, and the retrieval-quality problem that decides whether a RAG system is useful or merely confident.",
+    title: "Retrieval evaluation",
+    body: "RAG systems are quick to build and slow to trust. Building the labelled question sets and recall metrics that turn “the answers look right” into a number — which is exactly the gap PolicyMind has now.",
   },
   {
     title: "Natural language processing",
