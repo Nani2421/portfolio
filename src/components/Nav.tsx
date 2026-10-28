@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Mail } from "lucide-react";
 import { navLinks, profile } from "@/data/portfolio";
 import { Github, Linkedin } from "./BrandIcons";
@@ -8,28 +10,31 @@ import { Github, Linkedin } from "./BrandIcons";
 /**
  * One row: section links on the left, Résumé, then icon links on the right.
  * It stays at the top while scrolling, and the blue dot slides under the link
- * for whichever section is in view. On phones the links scroll sideways.
+ * for whichever home-page section is in view — or under Projects on the
+ * project pages. On phones the links scroll sideways.
  */
 
-const sections = [{ href: "#home", label: "Home" }, ...navLinks];
-
 export default function Nav() {
-  const [active, setActive] = useState("#home");
+  const pathname = usePathname();
+  const onHome = pathname === "/";
+  const [section, setSection] = useState("#home");
+  const active = onHome ? section : pathname.startsWith("/projects") ? "#projects" : "";
   const [dot, setDot] = useState<{ x: number; show: boolean }>({ x: 0, show: false });
   const links = useRef<Record<string, HTMLAnchorElement | null>>({});
 
   // The active section is the last one whose top has passed a line 35% down
   // the viewport; at the very bottom of the page it is the last section.
   useEffect(() => {
+    if (!onHome) return;
     const onScroll = () => {
       const line = window.innerHeight * 0.35;
-      let current = sections[0].href;
-      for (const s of sections) {
-        const el = document.querySelector(s.href);
-        if (el && el.getBoundingClientRect().top <= line) current = s.href;
+      let current = navLinks[0].section;
+      for (const l of navLinks) {
+        const el = document.querySelector(l.section);
+        if (el && el.getBoundingClientRect().top <= line) current = l.section;
       }
       const atBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 4;
-      setActive(atBottom ? sections[sections.length - 1].href : current);
+      setSection(atBottom ? navLinks[navLinks.length - 1].section : current);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -38,29 +43,29 @@ export default function Nav() {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, []);
+  }, [onHome]);
 
   // Centre the dot under the active link. Measured, so it works at any width.
   useLayoutEffect(() => {
     const el = links.current[active];
-    if (el) setDot({ x: el.offsetLeft + el.offsetWidth / 2, show: true });
+    setDot(el ? { x: el.offsetLeft + el.offsetWidth / 2, show: true } : (d) => ({ ...d, show: false }));
   }, [active]);
 
   return (
     <header className="sticky top-0 z-50 bg-page/90 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-site items-center justify-between gap-6 px-5">
         <nav className="relative -mx-1 flex items-center gap-1 overflow-x-auto text-[15px] sm:gap-4">
-          {sections.map((s) => (
-            <a
-              key={s.href}
+          {navLinks.map((l) => (
+            <Link
+              key={l.href}
               ref={(el) => {
-                links.current[s.href] = el;
+                links.current[l.section] = el;
               }}
-              href={s.href}
-              className={`shrink-0 px-1 py-2 transition-colors ${active === s.href ? "text-fg" : "text-muted hover:text-fg"}`}
+              href={l.href}
+              className={`shrink-0 px-1 py-2 transition-colors ${active === l.section ? "text-fg" : "text-muted hover:text-fg"}`}
             >
-              {s.label}
-            </a>
+              {l.label}
+            </Link>
           ))}
           <a
             href={profile.resumeUrl}
