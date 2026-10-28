@@ -112,6 +112,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
         </div>
       </Part>
 
+      {cs.broke && cs.broke.length > 0 && (
       <Part title="What broke, and the fix">
         <div className="border-t border-line">
           {cs.broke.map((b) => (
@@ -122,6 +123,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
           ))}
         </div>
       </Part>
+      )}
 
       {cs.results && cs.results.length > 0 && (
         <Part title="Results">

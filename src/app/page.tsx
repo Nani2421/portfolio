@@ -3,7 +3,6 @@ import {
   certifications,
   education,
   leadership,
-  moreProjects,
   profile,
   projects,
   skills,
@@ -107,7 +106,7 @@ export default function Home() {
             See all projects <ArrowRight size={14} />
           </Link>
         </div>
-        <div className="mt-8 grid gap-10 md:grid-cols-3 md:gap-6">
+        <div className="mt-8 grid gap-12 md:grid-cols-2 md:gap-x-8">
           {projects.map((p) => (
             <article key={p.slug}>
               <Link href={`/projects/${p.slug}`} className="block overflow-hidden rounded-sm">
@@ -116,7 +115,7 @@ export default function Home() {
                   alt={`${p.title} poster`}
                   width={1200}
                   height={900}
-                  sizes="(min-width: 768px) 320px, 100vw"
+                  sizes="(min-width: 768px) 480px, 100vw"
                   className="h-auto w-full transition-transform duration-300 hover:scale-[1.02]"
                 />
               </Link>
@@ -151,24 +150,6 @@ export default function Home() {
             All projects &amp; case studies <ArrowRight size={14} />
           </Link>
           <p className="text-[14px] text-muted">How each one works, the decisions behind it and what broke.</p>
-        </div>
-      </section>
-
-      {/* ---- More projects ---------------------------------------------- */}
-      <section className="py-12">
-        <Heading>More projects</Heading>
-        <div className="mt-6 border-t border-line">
-          {moreProjects.map((m) => (
-            <div key={m.title} className="grid gap-1 border-b border-line py-4 sm:grid-cols-[1fr_auto] sm:gap-6">
-              <div>
-                <a href={m.href} target="_blank" rel="noopener noreferrer" className="link inline-flex items-center gap-1 text-[16px] font-medium">
-                  {m.title} <ArrowUpRight size={14} />
-                </a>
-                <p className="mt-1 text-[15px] leading-relaxed text-muted">{m.summary}</p>
-              </div>
-              <p className="text-[13px] text-faint sm:pt-1 sm:text-right">{m.meta}</p>
-            </div>
-          ))}
         </div>
       </section>
 
