@@ -25,7 +25,7 @@ export default function Projects() {
             <article key={p.slug} className="grid gap-6 border-t border-line pt-10 md:grid-cols-[1fr_1.1fr] md:gap-10">
               <Link href={`/projects/${p.slug}`} className="block overflow-hidden rounded-sm">
                 <Image
-                  src={`/projects/${p.slug}.jpg`}
+                  src={`/projects/${p.slug}-light.jpg`}
                   alt={`${p.title} poster`}
                   width={1200}
                   height={900}
