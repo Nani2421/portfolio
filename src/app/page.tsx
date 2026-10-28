@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUpRight } from "lucide-react";
+import { ArrowDown, ArrowRight, ArrowUpRight } from "lucide-react";
 import {
   certifications,
   education,
@@ -95,13 +95,24 @@ export default function Home() {
 
       {/* ---- Projects --------------------------------------------------- */}
       <section id="projects" className="py-12">
-        <Heading>Featured projects</Heading>
+        {/* Short versions here; the full story of each is on /projects. */}
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <Heading>Featured projects</Heading>
+            <p className="mt-2 text-[15px] text-muted">
+              Short versions here — the full story of each is on the Projects page.
+            </p>
+          </div>
+          <Link href="/projects" className="pill">
+            See all projects <ArrowRight size={14} />
+          </Link>
+        </div>
         <div className="mt-8 grid gap-10 md:grid-cols-3 md:gap-6">
           {projects.map((p) => (
             <article key={p.slug}>
               <Link href={`/projects/${p.slug}`} className="block overflow-hidden rounded-sm">
                 <Image
-                  src={`/projects/${p.slug}.jpg`}
+                  src={`/projects/${p.slug}-light.jpg`}
                   alt={`${p.title} poster`}
                   width={1200}
                   height={900}
@@ -123,8 +134,8 @@ export default function Home() {
               </ul>
               <p className="mt-4 text-[13px] text-faint">{p.stack.join(" · ")}</p>
               <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[14px]">
-                <Link href={`/projects/${p.slug}`} className="link font-medium">
-                  How it works →
+                <Link href={`/projects/${p.slug}`} className="link font-medium text-accent">
+                  Read the full story →
                 </Link>
                 {p.links.map((l) => (
                   <a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer" className="link inline-flex items-center gap-1">
@@ -134,6 +145,12 @@ export default function Home() {
               </div>
             </article>
           ))}
+        </div>
+        <div className="mt-10 flex flex-wrap items-center gap-x-4 gap-y-2">
+          <Link href="/projects" className="pill">
+            All projects &amp; case studies <ArrowRight size={14} />
+          </Link>
+          <p className="text-[14px] text-muted">How each one works, the decisions behind it and what broke.</p>
         </div>
       </section>
 

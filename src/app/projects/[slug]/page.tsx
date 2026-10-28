@@ -70,7 +70,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
       </div>
 
       <div className="mt-10 overflow-hidden rounded-sm">
-        <Image src={`/projects/${cs.slug}.jpg`} alt={`${cs.title} poster`} width={1200} height={900} sizes="(min-width: 768px) 768px, 100vw" className="h-auto w-full" priority />
+        <Image src={`/projects/${cs.slug}-light.jpg`} alt={`${cs.title} poster`} width={1200} height={900} sizes="(min-width: 768px) 768px, 100vw" className="h-auto w-full" priority />
       </div>
 
       {/* ---- Story ---- */}
