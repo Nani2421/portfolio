@@ -1,151 +1,48 @@
-"use client";
-
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Mail } from "lucide-react";
 import { navLinks, profile } from "@/data/portfolio";
-import ThemeToggle from "./ThemeToggle";
-import ContactModal from "./ContactModal";
+import { Github, Linkedin } from "./BrandIcons";
 
 /**
- * Top bar, full page width.
- *
- * Replaces the sticky left rail. Transparent while the page is at the top and
- * picks up a single 6% hairline once it scrolls — no blur, no fill, no shadow,
- * in keeping with the rest of the system. The active item is the accent colour,
- * which is still the only place the accent appears above the fold.
+ * One row: section links on the left, Résumé, then icon links on the right.
+ * It stays at the top while scrolling, on the page colour so text never
+ * shows through. On phones the links scroll sideways instead of wrapping.
  */
-
-type NavItem = { href: string; label: string; exact?: boolean };
-
-const items: NavItem[] = [{ href: "/", label: "Home", exact: true }, ...navLinks];
-
-/** Nav and other UI chrome use the heading sans, not the body serif. */
-const HEADING = { fontFamily: "var(--font-heading)" };
-
 export default function Nav() {
-  const pathname = usePathname();
-  const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [contact, setContact] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  const isActive = (href: string, exact?: boolean) =>
-    exact ? pathname === href : pathname.startsWith(href);
-
   return (
-    <header
-      style={{ viewTransitionName: "site-header" }}
-      className={`fixed inset-x-0 top-0 z-50 bg-page transition-colors duration-300 ${
-        scrolled ? "border-b border-line" : "border-b border-transparent"
-      }`}
-    >
-      <div className="mx-auto flex h-16 max-w-site items-center justify-between px-gutter">
-        <Link
-          href="/"
-          transitionTypes={["nav-back"]}
-          className="display-sm text-h3"
-        >
-          {profile.shortName}
-        </Link>
-
-        <nav className="hidden items-center gap-8 md:flex">
-          {items.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              transitionTypes={[item.exact ? "nav-back" : "nav-forward"]}
-              style={HEADING}
-              className={`text-[15px] transition-colors ${
-                isActive(item.href, item.exact)
-                  ? "text-accent"
-                  : "text-muted hover:text-fg"
-              }`}
-            >
-              {item.label}
-            </Link>
+    <header className="sticky top-0 z-50 bg-page/90 backdrop-blur-sm">
+      <div className="mx-auto flex h-16 max-w-site items-center justify-between gap-6 px-5">
+        <nav className="-mx-1 flex items-center gap-1 overflow-x-auto text-[15px] sm:gap-4">
+          <a href="#top" className="relative shrink-0 px-1 py-2">
+            Home
+            <span className="absolute -bottom-0.5 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-accent" />
+          </a>
+          {navLinks.map((l) => (
+            <a key={l.href} href={l.href} className="shrink-0 px-1 py-2 text-muted transition-colors hover:text-fg">
+              {l.label}
+            </a>
           ))}
           <a
             href={profile.resumeUrl}
             target="_blank"
             rel="noopener noreferrer"
-            style={HEADING}
-            className="text-[15px] text-muted transition-colors hover:text-fg"
+            className="shrink-0 px-1 py-2 text-muted transition-colors hover:text-fg"
           >
             Résumé
           </a>
-          {/* Secondary button: transparent fill, 1px hard border, 28px tall. */}
-          <button
-            onClick={() => setContact(true)}
-            style={HEADING}
-            className="inline-flex h-7 items-center border border-fg px-2.5 pb-px text-[15px] transition-colors hover:bg-fg hover:text-page"
-          >
-            Get in touch
-          </button>
-          <ThemeToggle />
         </nav>
 
-        <div className="flex items-center gap-4 md:hidden">
-          <ThemeToggle />
-          <button
-            onClick={() => setOpen((v) => !v)}
-            style={HEADING}
-            className="text-[15px] text-muted"
-            aria-expanded={open}
-          >
-            {open ? "Close" : "Menu"}
-          </button>
+        <div className="hidden shrink-0 items-center gap-4 text-fg sm:flex">
+          <a href={profile.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="opacity-80 hover:opacity-100">
+            <Github size={17} />
+          </a>
+          <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="opacity-80 hover:opacity-100">
+            <Linkedin size={17} />
+          </a>
+          <a href={`mailto:${profile.email}`} aria-label="Email" className="opacity-80 hover:opacity-100">
+            <Mail size={18} />
+          </a>
         </div>
       </div>
-
-      {open && (
-        <div className="border-t border-line md:hidden">
-          <div className="mx-auto flex max-w-site flex-col px-gutter pb-4">
-            {items.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                transitionTypes={[item.exact ? "nav-back" : "nav-forward"]}
-                onClick={() => setOpen(false)}
-                style={HEADING}
-                className={`py-3 text-[15px] ${
-                  isActive(item.href, item.exact) ? "text-accent" : "text-muted"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-            <a
-              href={profile.resumeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setOpen(false)}
-              style={HEADING}
-              className="py-3 text-[15px] text-muted"
-            >
-              Résumé
-            </a>
-            <button
-              onClick={() => {
-                setOpen(false);
-                setContact(true);
-              }}
-              style={HEADING}
-              className="py-3 text-left text-[15px] text-accent"
-            >
-              Get in touch
-            </button>
-          </div>
-        </div>
-      )}
-
-      <ContactModal open={contact} onClose={() => setContact(false)} />
     </header>
   );
 }
