@@ -37,7 +37,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         <Backdrop />
         <Nav />
-        <main id="top" className="mx-auto max-w-site px-5">
+        <main className="mx-auto max-w-site px-5">
           {children}
           <Footer />
         </main>

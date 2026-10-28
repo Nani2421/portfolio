@@ -8,7 +8,7 @@ import {
   skills,
   updates,
 } from "@/data/portfolio";
-import ProjectArt from "@/components/ProjectArt";
+import Image from "next/image";
 
 /** A section heading, the same everywhere. */
 function Heading({ children }: { children: React.ReactNode }) {
@@ -29,17 +29,14 @@ export default function Home() {
   return (
     <>
       {/* ---- Hello ------------------------------------------------------ */}
-      <section className="grid items-center gap-12 py-16 md:grid-cols-[1.1fr_1fr] md:py-28">
+      <section id="home" className="grid items-center gap-12 py-16 md:grid-cols-[1.1fr_1fr] md:py-28">
         <div>
-          <h1 className="text-[40px] font-medium tracking-tight">Hello 👋</h1>
+          <h1 className="text-[40px] font-medium tracking-tight">Hi, I’m Neeraj 👋</h1>
           <p className="mt-5 text-[16px] leading-[1.75]">
-            I am <b className="font-medium">Sri Neeraj Reddy</b>, a computer science graduate from{" "}
-            <b className="font-medium">VIT-AP</b> who builds AI systems and the products around them.
-          </p>
-          <p className="mt-4 text-[16px] italic leading-[1.75] text-muted">
-            I work on LLMs, retrieval-augmented generation and computer vision — and I like
-            shipping things people actually use, like{" "}
-            <a href="https://getpingdrop.vercel.app" target="_blank" rel="noopener noreferrer" className="link text-fg not-italic">
+            I’m into <b className="font-medium">AI, ML</b> and building things around them — LLMs,
+            retrieval-augmented generation and computer vision. I’m a computer science graduate from{" "}
+            <b className="font-medium">VIT-AP</b>, and I like shipping things people actually use, like{" "}
+            <a href="https://getpingdrop.vercel.app" target="_blank" rel="noopener noreferrer" className="link">
               PingDrop
             </a>
             , which puts your Android phone on your Mac.
@@ -100,9 +97,16 @@ export default function Home() {
         <div className="mt-8 grid gap-10 md:grid-cols-3 md:gap-6">
           {projects.map((p) => (
             <article key={p.slug}>
-              <div className="aspect-[4/3] p-6" style={{ background: p.tint }}>
-                <ProjectArt slug={p.slug} />
-              </div>
+              <a href={p.links[0].href} target="_blank" rel="noopener noreferrer" className="block overflow-hidden rounded-sm">
+                <Image
+                  src={`/projects/${p.slug}.jpg`}
+                  alt={`${p.title} poster`}
+                  width={1200}
+                  height={900}
+                  sizes="(min-width: 768px) 320px, 100vw"
+                  className="h-auto w-full transition-transform duration-300 hover:scale-[1.02]"
+                />
+              </a>
               <h3 className="mt-4 text-[18px] font-medium">
                 <a href={p.links[0].href} target="_blank" rel="noopener noreferrer" className="link">
                   {p.title}
