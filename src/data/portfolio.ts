@@ -8,7 +8,7 @@ export const profile = {
   shortName: "Neeraj",
   // Used for search results and link previews.
   description:
-    "Sri Neeraj Reddy — a computer science graduate from VIT-AP who builds AI systems (LLMs, RAG, computer vision) and real products like PingDrop.",
+    "Hi, I’m Neeraj — into AI, ML and building things around them: LLMs, RAG, computer vision, and products like PingDrop. Computer science graduate from VIT-AP.",
   location: "Amaravati, India",
   email: "srineerajreddyp@gmail.com",
   github: "https://github.com/nani2421",
@@ -23,8 +23,7 @@ export type Project = {
   summary: string;
   /** Small grey line: what kind of thing, when. */
   meta: string;
-  /** Pastel panel behind the line art. */
-  tint: string;
+  /** Poster in public/projects/<slug>.jpg. */
   points: string[];
   stack: string[];
   links: { label: string; href: string }[];
@@ -36,7 +35,6 @@ export const projects: Project[] = [
     title: "PingDrop",
     summary: "Your Android phone, on your Mac — with no account and no cloud.",
     meta: "Shipped · Google Play & macOS · Mar 2026 – Present",
-    tint: "#e9e8fb",
     points: [
       "Free Android + macOS app; the devices talk directly and encrypted over Wi-Fi and Bluetooth LE, switching between them on their own.",
       "Notifications with replies, calls (including WhatsApp), file and folder transfer, clipboard sync, the phone as a Mac webcam and a walk-away lock.",
@@ -46,6 +44,7 @@ export const projects: Project[] = [
     links: [
       { label: "Website", href: "https://getpingdrop.vercel.app" },
       { label: "Google Play", href: "https://play.google.com/store/apps/details?id=com.app.pingdrop" },
+      { label: "Download for Mac", href: "https://github.com/Neerajreddyapi/Pingdrop/releases/latest/download/PingDrop.dmg" },
     ],
   },
   {
@@ -53,7 +52,6 @@ export const projects: Project[] = [
     title: "PolicyMind AI",
     summary: "A policy assistant that answers across company PDFs and cites the page.",
     meta: "RAG · Gemini · Aug 2026",
-    tint: "#e3f4ef",
     points: [
       "Multi-document RAG over policy PDFs with semantic and keyword retrieval, and grounded answers from Google Gemini.",
       "Persistent ChromaDB store with page-level citations; hybrid BM25 + dense search, cross-encoder reranking and deduplication.",
@@ -67,7 +65,6 @@ export const projects: Project[] = [
     title: "Efficient ANPR",
     summary: "Number-plate recognition for Indian traffic video, read once per vehicle.",
     meta: "Computer vision · Jan 2026",
-    tint: "#fbece2",
     points: [
       "Two YOLOv8n models trained on Indian traffic data — vehicles (21,000+ images) and number plates (2,000+ images).",
       "Video pipeline: vehicle boxes feed the plate model, and plate crops go to PaddleOCR.",
