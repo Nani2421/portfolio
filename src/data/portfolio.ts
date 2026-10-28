@@ -17,7 +17,7 @@ export const profile = {
 };
 
 export type Project = {
-  slug: "pingdrop" | "policymind" | "anpr";
+  slug: "pingdrop" | "policymind" | "anpr" | "theft";
   title: string;
   /** One line under the title. */
   summary: string;
@@ -73,15 +73,18 @@ export const projects: Project[] = [
     stack: ["Python", "YOLOv8n", "DeepSORT", "PaddleOCR", "OpenCV"],
     links: [{ label: "GitHub", href: "https://github.com/Nani2421/Efficient-ANPR" }],
   },
-];
-
-/** Smaller projects — on the site only, not the résumé. Newest first. */
-export const moreProjects = [
   {
+    slug: "theft",
     title: "Real-Time Theft Detection",
-    summary: "Four YOLOv10 models (n, s, m, l) custom-trained to spot theft on CCTV feeds, live or on recorded video.",
-    meta: "2025 · YOLOv10 · Computer vision",
-    href: "https://github.com/Nani2421/REAL-TIME-THEFT-DETECTION",
+    summary: "Spots suspicious behaviour on CCTV video, live or recorded.",
+    meta: "Computer vision · 2025",
+    points: [
+      "Four YOLOv10 models (nano, small, medium, large) trained to tell people from suspicious activity.",
+      "Large reaches 84.9% mAP@50 on 1,325 held-out images; nano is within 2.3 points at 2.2 ms per image.",
+      "Pick the size per camera — fast for edge devices, accurate for a central server.",
+    ],
+    stack: ["Python", "YOLOv10", "Ultralytics", "Google Colab"],
+    links: [{ label: "GitHub", href: "https://github.com/Nani2421/REAL-TIME-THEFT-DETECTION" }],
   },
 ];
 

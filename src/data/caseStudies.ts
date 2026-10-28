@@ -44,7 +44,8 @@ export type CaseStudy = {
     caption: string;
   };
   decisions: Decision[];
-  broke: Breakage[];
+  /** Left out where nothing is on record, rather than invented. */
+  broke?: Breakage[];
   results?: { label: string; value: string; note?: string }[];
   next: string;
 };
@@ -331,6 +332,60 @@ export const caseStudies: CaseStudy[] = [
       },
     ],
     next: "Next on the list: the phone's screen on the Mac (reusing the webcam pipeline), camera filters for the webcam, and a wired USB mode for very large files — and the Product Hunt launch on 3 November 2026.",
+  },
+  {
+    slug: "theft",
+    title: "Real-Time Theft Detection",
+    what: "Spots suspicious behaviour on CCTV video, live or recorded, with four YOLOv10 models.",
+    period: "2025",
+    status: "Prototype",
+    domain: "Computer vision",
+    role: "Sole author",
+    stack: ["Python", "YOLOv10", "Ultralytics", "Google Colab", "Tesla T4"],
+    links: [{ label: "GitHub repo", href: "https://github.com/Nani2421/REAL-TIME-THEFT-DETECTION" }],
+    outcome:
+      "Four YOLOv10 detectors — nano to large — trained to tell people from suspicious activity in CCTV frames. The large model reaches 84.9% mAP@50 on 1,325 held-out images; the nano model gets within 2.3 points of it at 2.2 ms per image on a Tesla T4.",
+    tldr: [
+      "Two classes — human and suspicion — trained on the Improved Thief Detection dataset from Kaggle.",
+      "The same training recipe at four model sizes, all at 640 px, so a camera setup can choose speed or accuracy.",
+      "Runs on a live CCTV stream or on recorded footage.",
+    ],
+    problem:
+      "CCTV is recorded far more than it is watched. A detector that flags suspicious behaviour as it happens turns hours of footage into a few moments worth a look — but only if it can run on the hardware behind the cameras, not just on a large GPU.",
+    constraints: [
+      "Real time: a frame has to be processed before the next one arrives.",
+      "Hardware differs per site — a single camera box and a central server cannot run the same model.",
+      "Training on free Colab GPUs (a Tesla T4), in sessions that end.",
+    ],
+    architecture: {
+      nodes: [
+        { id: "cam", label: "CCTV frame", sub: "live stream or recording" },
+        { id: "model", label: "YOLOv10", sub: "n · s · m · l, chosen per site" },
+        { id: "det", label: "Detections", sub: "human · suspicion" },
+        { id: "flag", label: "Flagged frames", sub: "suspicion above threshold" },
+        { id: "out", label: "For review", sub: "the moments worth a look" },
+      ],
+      caption: "The four sizes share one pipeline — only the model file changes.",
+    },
+    decisions: [
+      {
+        decision: "YOLOv10 rather than an older YOLO.",
+        alternatives: "YOLOv8, which most tutorials use.",
+        why: "YOLOv10 is trained to predict without non-maximum suppression, so there is less post-processing per frame — the part that adds latency on live video.",
+      },
+      {
+        decision: "Train four sizes instead of picking one.",
+        alternatives: "A single model, and live with its speed.",
+        why: "The right trade-off depends on where it runs. With all four trained and measured on the same validation set, the choice per camera is a lookup, not a guess: nano at 2.2 ms per image, large at 15.1 ms with 2.3 points more mAP@50.",
+      },
+    ],
+    results: [
+      { label: "YOLOv10-l mAP@50", value: "84.9%", note: "mAP@50-95 56.9% · 15.1 ms per image on a T4" },
+      { label: "YOLOv10-s mAP@50", value: "84.1%", note: "mAP@50-95 55.5%" },
+      { label: "YOLOv10-m mAP@50", value: "83.5%", note: "mAP@50-95 53.7% · 9.5 ms per image" },
+      { label: "YOLOv10-n mAP@50", value: "82.6%", note: "mAP@50-95 53.3% · 2.2 ms per image" },
+    ],
+    next: "Turn detections into alerts: track each person across frames so one incident raises one alert, tune the suspicion threshold on real footage, and measure the models on CPUs and edge devices rather than only on a T4.",
   },
 ];
 

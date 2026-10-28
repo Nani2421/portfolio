@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
-import { moreProjects, projects } from "@/data/portfolio";
+import { projects } from "@/data/portfolio";
 import { caseStudies } from "@/data/caseStudies";
 
 export const metadata: Metadata = {
   title: "Projects — Neeraj",
-  description: "PingDrop, PolicyMind AI, Efficient ANPR and more — what each one does, how it works and what I learned building it.",
+  description: "PingDrop, PolicyMind AI, Efficient ANPR and Real-Time Theft Detection — what each one does, how it works and what I learned building it.",
 };
 
 export default function Projects() {
@@ -58,22 +58,6 @@ export default function Projects() {
         })}
       </div>
 
-      <section className="mt-20">
-        <h2 className="text-[26px] font-medium tracking-tight">More projects</h2>
-        <div className="mt-6 border-t border-line">
-          {moreProjects.map((m) => (
-            <div key={m.title} className="grid gap-1 border-b border-line py-4 sm:grid-cols-[1fr_auto] sm:gap-6">
-              <div>
-                <a href={m.href} target="_blank" rel="noopener noreferrer" className="link inline-flex items-center gap-1 text-[16px] font-medium">
-                  {m.title} <ArrowUpRight size={14} />
-                </a>
-                <p className="mt-1 text-[15px] leading-relaxed text-muted">{m.summary}</p>
-              </div>
-              <p className="text-[13px] text-faint sm:pt-1 sm:text-right">{m.meta}</p>
-            </div>
-          ))}
-        </div>
-      </section>
     </div>
   );
 }

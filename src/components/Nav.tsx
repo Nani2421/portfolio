@@ -61,7 +61,7 @@ export default function Nav() {
               ref={(el) => {
                 links.current[l.section] = el;
               }}
-              href={l.href}
+              href={onHome && l.section === "#projects" ? "#projects" : l.href}
               className={`shrink-0 px-1 py-2 transition-colors ${active === l.section ? "text-fg" : "text-muted hover:text-fg"}`}
             >
               {l.label}
