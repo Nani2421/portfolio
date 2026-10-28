@@ -10,6 +10,7 @@ import {
   updates,
 } from "@/data/portfolio";
 import Image from "next/image";
+import Link from "next/link";
 
 /** A section heading, the same everywhere. */
 function Heading({ children }: { children: React.ReactNode }) {
@@ -43,9 +44,9 @@ export default function Home() {
             , which puts your Android phone on your Mac.
           </p>
           <div className="mt-7 flex flex-wrap gap-2">
-            <a href="#projects" className="pill">
+            <Link href="/projects" className="pill">
               View projects <ArrowUpRight size={14} />
-            </a>
+            </Link>
             <a href={profile.resumeUrl} target="_blank" rel="noopener noreferrer" className="pill">
               Résumé <ArrowDown size={14} />
             </a>
@@ -98,7 +99,7 @@ export default function Home() {
         <div className="mt-8 grid gap-10 md:grid-cols-3 md:gap-6">
           {projects.map((p) => (
             <article key={p.slug}>
-              <a href={p.links[0].href} target="_blank" rel="noopener noreferrer" className="block overflow-hidden rounded-sm">
+              <Link href={`/projects/${p.slug}`} className="block overflow-hidden rounded-sm">
                 <Image
                   src={`/projects/${p.slug}.jpg`}
                   alt={`${p.title} poster`}
@@ -107,11 +108,11 @@ export default function Home() {
                   sizes="(min-width: 768px) 320px, 100vw"
                   className="h-auto w-full transition-transform duration-300 hover:scale-[1.02]"
                 />
-              </a>
+              </Link>
               <h3 className="mt-4 text-[18px] font-medium">
-                <a href={p.links[0].href} target="_blank" rel="noopener noreferrer" className="link">
+                <Link href={`/projects/${p.slug}`} className="link">
                   {p.title}
-                </a>
+                </Link>
               </h3>
               <p className="mt-2 text-[15px] leading-relaxed">{p.summary}</p>
               <p className="mt-1 text-[13px] text-faint">{p.meta}</p>
@@ -122,6 +123,9 @@ export default function Home() {
               </ul>
               <p className="mt-4 text-[13px] text-faint">{p.stack.join(" · ")}</p>
               <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[14px]">
+                <Link href={`/projects/${p.slug}`} className="link font-medium">
+                  How it works →
+                </Link>
                 {p.links.map((l) => (
                   <a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer" className="link inline-flex items-center gap-1">
                     {l.label} <ArrowUpRight size={13} />

@@ -138,9 +138,11 @@ export const certifications = [
   },
 ];
 
+/** `href` is where the link goes; `section` is the home-page section it lights up for. */
 export const navLinks = [
-  { href: "#projects", label: "Projects" },
-  { href: "#updates", label: "Updates" },
-  { href: "#skills", label: "Skills" },
-  { href: "#about", label: "About" },
+  { href: "/#home", section: "#home", label: "Home" },
+  { href: "/projects", section: "#projects", label: "Projects" },
+  { href: "/#updates", section: "#updates", label: "Updates" },
+  { href: "/#skills", section: "#skills", label: "Skills" },
+  { href: "/#about", section: "#about", label: "About" },
 ];
