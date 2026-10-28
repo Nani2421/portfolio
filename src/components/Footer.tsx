@@ -1,76 +1,27 @@
 import { profile } from "@/data/portfolio";
-import { navLinks } from "@/data/portfolio";
 
-/**
- * Wordmark left, link columns right, a single 6% hairline on top.
- *
- * Every link here is Geist Mono 12px in the muted colour, and every one uses
- * `.link-flood` — hovering snaps a solid accent block in behind the text and
- * flips it white. That is the one loud interaction in the whole system, and it
- * only lands because nothing else moves. Resist adding a second.
- */
-
-const columns = [
-  {
-    heading: "Pages",
-    links: [
-      { label: "Home", href: "/" },
-      ...navLinks.map((l) => ({ label: l.label, href: l.href })),
-    ],
-  },
-  {
-    heading: "Elsewhere",
-    links: [
-      { label: "GitHub", href: profile.github, external: true },
-      { label: "LinkedIn", href: profile.linkedin, external: true },
-      { label: "Résumé", href: profile.resumeUrl, external: true },
-    ],
-  },
-  {
-    heading: "Contact",
-    links: [
-      { label: profile.email, href: `mailto:${profile.email}` },
-      { label: profile.phone, href: `tel:${profile.phone.replace(/\s/g, "")}` },
-    ],
-  },
-];
-
+/** A short sign-off: how to reach me, and where else I am. */
 export default function Footer() {
   return (
-    <footer className="border-t border-line pb-16 pt-8">
-      <div className="flex flex-col justify-between gap-10 sm:flex-row">
-        <p className="display-sm text-h3">{profile.name}</p>
+    <footer className="mt-24 border-t border-line py-10 text-[15px]">
+      <p className="text-2xl">Let’s talk.</p>
+      <p className="mt-3 text-muted">
+        I’m open to roles in AI, machine learning and app development. Email me at{" "}
+        <a href={`mailto:${profile.email}`} className="link text-fg">
+          {profile.email}
+        </a>
+        .
+      </p>
 
-        <div className="flex flex-wrap gap-x-12 gap-y-8">
-          {columns.map((col) => (
-            <div key={col.heading}>
-              <p className="font-mono text-meta text-faint">{col.heading}</p>
-              <ul className="mt-3 space-y-2">
-                {col.links.map((link) => (
-                  <li key={link.label}>
-                    <a
-                      href={link.href}
-                      {...("external" in link && link.external
-                        ? { target: "_blank", rel: "noopener noreferrer" }
-                        : {})}
-                      className="link-flood font-mono text-meta text-muted"
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
+      <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-muted">
+        <a href={profile.github} target="_blank" rel="noopener noreferrer" className="link">GitHub</a>
+        <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="link">LinkedIn</a>
+        <a href={profile.resumeUrl} target="_blank" rel="noopener noreferrer" className="link">Résumé</a>
       </div>
 
-      <div className="mt-16 flex flex-col justify-between gap-2 font-mono text-meta text-faint sm:flex-row">
-        <p>
-          © {new Date().getFullYear()} {profile.name}
-        </p>
-        <p>{profile.location}</p>
-      </div>
+      <p className="mt-10 text-[13px] text-faint">
+        © {new Date().getFullYear()} {profile.name} · {profile.location}
+      </p>
     </footer>
   );
 }

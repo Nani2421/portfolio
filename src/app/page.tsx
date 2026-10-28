@@ -1,130 +1,202 @@
-import { ViewTransition } from "react";
-import Link from "next/link";
-import { profile, projects, capabilities } from "@/data/portfolio";
-import Reveal from "@/components/Reveal";
-import Section from "@/components/Section";
-import ProjectCard from "@/components/ProjectCard";
-import SkillSnake from "@/components/SkillSnake";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
+import {
+  certifications,
+  education,
+  leadership,
+  profile,
+  projects,
+  skills,
+  updates,
+} from "@/data/portfolio";
+import ProjectArt from "@/components/ProjectArt";
 
-const featured = projects.filter((p) => p.featured);
+/** A section heading, the same everywhere. */
+function Heading({ children }: { children: React.ReactNode }) {
+  return <h2 className="text-[26px] font-medium tracking-tight">{children}</h2>;
+}
 
-/** Buttons and other UI chrome use the heading sans, not the body serif. */
-const HEADING = { fontFamily: "var(--font-heading)" };
+/** Date on the left, text on the right, a hairline between rows. */
+function Row({ left, children }: { left: string; children: React.ReactNode }) {
+  return (
+    <div className="grid gap-1 border-b border-line py-4 sm:grid-cols-[150px_1fr] sm:gap-6">
+      <p className="text-[14px] text-faint">{left}</p>
+      <div className="text-[15px] leading-relaxed">{children}</div>
+    </div>
+  );
+}
 
 export default function Home() {
   return (
-    // Must wrap the outermost element, and `default="none"` stops every
-    // named element animating on every navigation.
-    <ViewTransition
-      enter={{ "nav-forward": "nav-forward", "nav-back": "nav-back", default: "none" }}
-      exit={{ "nav-forward": "nav-forward", "nav-back": "nav-back", default: "none" }}
-      default="none"
-    >
-      <div>
-        {/* ---- Hero ------------------------------------------------------
-            The source hero has no buttons — it can afford that, because the
-            page below it is product proof and the reader already knows why
-            they're there. A portfolio reader doesn't, so the two things they
-            might want next are made explicit. Everything else stays quiet. */}
-        <Section n="01">
-          <p className="eyebrow flex items-center gap-2">
-            <span className="inline-block h-1.5 w-1.5 bg-accent" />
-            {profile.availability}
+    <>
+      {/* ---- Hello ------------------------------------------------------ */}
+      <section className="grid items-center gap-12 py-16 md:grid-cols-[1.1fr_1fr] md:py-28">
+        <div>
+          <h1 className="text-[40px] font-medium tracking-tight">Hello 👋</h1>
+          <p className="mt-5 text-[16px] leading-[1.75]">
+            I am <b className="font-medium">Sri Neeraj Reddy</b>, a computer science graduate from{" "}
+            <b className="font-medium">VIT-AP</b> who builds AI systems and the products around them.
           </p>
-
-          <h1 className="display mt-6 text-hero">{profile.greeting}</h1>
-
-          <p className="measure mt-6 text-lead leading-snug">
-            {profile.subline}
+          <p className="mt-4 text-[16px] italic leading-[1.75] text-muted">
+            I work on LLMs, retrieval-augmented generation and computer vision — and I like
+            shipping things people actually use, like{" "}
+            <a href="https://getpingdrop.vercel.app" target="_blank" rel="noopener noreferrer" className="link text-fg not-italic">
+              PingDrop
+            </a>
+            , which puts your Android phone on your Mac.
           </p>
-
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Link
-              href="/work"
-              transitionTypes={["nav-forward"]}
-              style={HEADING}
-              className="inline-flex h-10 items-center bg-button px-4 text-[15px] text-page transition-colors hover:bg-fg"
-            >
-              See the work
-            </Link>
-            <a
-              href={`mailto:${profile.email}`}
-              style={HEADING}
-              className="inline-flex h-10 items-center border border-fg px-4 text-[15px] transition-colors hover:bg-fg hover:text-page"
-            >
-              Email me
+          <div className="mt-7 flex flex-wrap gap-2">
+            <a href="#projects" className="pill">
+              View projects <ArrowUpRight size={14} />
+            </a>
+            <a href={profile.resumeUrl} target="_blank" rel="noopener noreferrer" className="pill">
+              Résumé <ArrowDown size={14} />
             </a>
           </div>
-        </Section>
+        </div>
 
-        {/* ---- Skills ------------------------------------------------------
-            Sits directly under the hero rather than at the foot of the page:
-            it is the one thing here that isn't a paragraph, so it earns the
-            first scroll instead of waiting until after the case-study list.
-            It reads the CSS colour tokens at runtime, so it repaints itself
-            on a theme flip without this page knowing. */}
-        <Section n="02" label="Skills">
-          <p className="measure leading-relaxed text-muted">
-            A snake that eats them. It plays itself until you take over with the
-            arrow keys or a swipe; the full list is written out underneath.
-          </p>
-          <div className="mt-8">
-            <SkillSnake />
-          </div>
-        </Section>
-
-        {/* ---- Selected work --------------------------------------------- */}
-        <Section n="03" label="Selected work">
-          <div className="border-t border-line">
-            {featured.map((project, i) => (
-              <Reveal key={project.slug} delay={i * 0.04}>
-                <ProjectCard project={project} index={i} />
-              </Reveal>
-            ))}
-          </div>
-
-          <Link
-            href="/work"
-            transitionTypes={["nav-forward"]}
-            style={HEADING}
-            className="mt-8 inline-flex h-10 items-center border border-fg px-4 text-[15px] transition-colors hover:bg-fg hover:text-page"
+        {/* A drawing in place of a photo: the desk the work happens at. */}
+        <div className="aspect-[4/3] rounded-sm bg-[#eef0f8] p-8">
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 320 240"
+            className="h-full w-full"
+            fill="none"
+            stroke="#5b5f8f"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            opacity="0.85"
           >
-            All projects
-          </Link>
-        </Section>
+            {/* desk */}
+            <path d="M20 196 H300 M40 196 V232 M280 196 V232" />
+            {/* Mac with a small network on the screen */}
+            <rect x="96" y="92" width="128" height="84" rx="6" />
+            <rect x="106" y="101" width="108" height="64" rx="2" />
+            <path d="M80 176 H240 L232 186 H88 Z" />
+            {[116, 133, 150].map((y) =>
+              [124, 142].map((y2) => <path key={`${y}-${y2}`} d={`M130 ${y} L160 ${y2}`} opacity="0.6" />),
+            )}
+            {[124, 142].map((y) => <path key={`o${y}`} d={`M160 ${y} L190 133`} opacity="0.6" />)}
+            {[116, 133, 150].map((y) => <circle key={`a${y}`} cx="130" cy={y} r="4" fill="#eef0f8" />)}
+            {[124, 142].map((y) => <circle key={`b${y}`} cx="160" cy={y} r="4" fill="#eef0f8" />)}
+            <circle cx="190" cy="133" r="4" fill="#eef0f8" />
+            {/* phone, with signal to the Mac */}
+            <rect x="248" y="140" width="30" height="54" rx="7" />
+            <path d="M258 146 H268" />
+            <path d="M238 156 Q230 166 238 176 M230 150 Q218 166 230 182" opacity="0.8" />
+            {/* mug */}
+            <path d="M48 166 H72 V190 Q72 194 68 194 H52 Q48 194 48 190 Z M72 172 Q82 172 82 180 Q82 186 72 186" />
+            <path d="M56 156 Q52 150 56 144 M64 156 Q60 150 64 144" opacity="0.6" />
+            {/* lamp */}
+            <path d="M268 196 V88 L236 60" />
+            <path d="M222 48 L250 72 L236 60 Z M220 46 L252 74" />
+          </svg>
+        </div>
+      </section>
 
-        {/* ---- Capabilities ----------------------------------------------
-            Was a bordered two-column card grid; now a plain definition list.
-            The source has no cards anywhere — no borders, no fills, no
-            shadows — so the structure has to come from spacing and rules. */}
-        <Section n="04" label="What I can do">
-          <p className="measure text-lead leading-snug">
-            No skill bars. Each of these is something I built, and the link goes
-            to how.
-          </p>
+      {/* ---- Projects --------------------------------------------------- */}
+      <section id="projects" className="py-12">
+        <Heading>Featured projects</Heading>
+        <div className="mt-8 grid gap-10 md:grid-cols-3 md:gap-6">
+          {projects.map((p) => (
+            <article key={p.slug}>
+              <div className="aspect-[4/3] p-6" style={{ background: p.tint }}>
+                <ProjectArt slug={p.slug} />
+              </div>
+              <h3 className="mt-4 text-[18px] font-medium">
+                <a href={p.links[0].href} target="_blank" rel="noopener noreferrer" className="link">
+                  {p.title}
+                </a>
+              </h3>
+              <p className="mt-2 text-[15px] leading-relaxed">{p.summary}</p>
+              <p className="mt-1 text-[13px] text-faint">{p.meta}</p>
+              <ul className="mt-4 list-disc space-y-1.5 pl-4 text-[14px] leading-relaxed text-muted marker:text-faint">
+                {p.points.map((pt) => (
+                  <li key={pt}>{pt}</li>
+                ))}
+              </ul>
+              <p className="mt-4 text-[13px] text-faint">{p.stack.join(" · ")}</p>
+              <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[14px]">
+                {p.links.map((l) => (
+                  <a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer" className="link inline-flex items-center gap-1">
+                    {l.label} <ArrowUpRight size={13} />
+                  </a>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
 
-          <dl className="mt-10 border-t border-line">
-            {capabilities.map((cap, i) => (
-              <Reveal key={cap.claim} delay={i * 0.04}>
-                <div className="grid gap-x-10 gap-y-2 border-b border-line py-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)]">
-                  <dt className="display-sm text-h3">{cap.claim}</dt>
-                  <dd className="leading-relaxed text-muted">
-                    {cap.detail}
-                    <Link
-                      href={`/work/${cap.proof}`}
-                      transitionTypes={["nav-forward"]}
-                      className="link-underline ml-2 whitespace-nowrap text-accent"
-                    >
-                      Proof
-                    </Link>
-                  </dd>
-                </div>
-              </Reveal>
+      {/* ---- Updates ---------------------------------------------------- */}
+      <section id="updates" className="py-12">
+        <Heading>Updates</Heading>
+        <div className="mt-6 border-t border-line">
+          {updates.map((u) => (
+            <Row key={u.date + u.text} left={u.date}>
+              {u.text}
+              {u.tag && <span className="ml-2 text-[13px] text-accent">{u.tag}</span>}
+            </Row>
+          ))}
+        </div>
+      </section>
+
+      {/* ---- Skills ----------------------------------------------------- */}
+      <section id="skills" className="py-12">
+        <Heading>Skills</Heading>
+        <div className="mt-6 border-t border-line">
+          {skills.map((s) => (
+            <Row key={s.group} left={s.group}>
+              <div className="flex flex-wrap gap-2">
+                {s.items.map((i) => (
+                  <span key={i} className="rounded-md bg-chip px-2.5 py-1 text-[14px]">
+                    {i}
+                  </span>
+                ))}
+              </div>
+            </Row>
+          ))}
+        </div>
+      </section>
+
+      {/* ---- About: education, leadership, certificates ----------------- */}
+      <section id="about" className="py-12">
+        <Heading>Education</Heading>
+        <div className="mt-6 border-t border-line">
+          {education.map((e) => (
+            <Row key={e.institution} left={e.period}>
+              <p className="font-medium">{e.institution}</p>
+              <p className="text-muted">{e.credential}</p>
+            </Row>
+          ))}
+        </div>
+
+        <div className="mt-14">
+          <Heading>Positions of responsibility</Heading>
+          <div className="mt-6 border-t border-line">
+            {leadership.map((l) => (
+              <Row key={l.role} left={l.period}>
+                <span className="font-medium">{l.role}</span>
+                <span className="text-muted"> · {l.org}</span>
+              </Row>
             ))}
-          </dl>
-        </Section>
+          </div>
+        </div>
 
-      </div>
-    </ViewTransition>
+        <div className="mt-14">
+          <Heading>Certifications</Heading>
+          <div className="mt-6 border-t border-line">
+            {certifications.map((c) => (
+              <Row key={c.name} left={c.year}>
+                <a href={c.url} target="_blank" rel="noopener noreferrer" className="link font-medium">
+                  {c.name}
+                </a>
+                <span className="text-muted"> · {c.issuer}</span>
+              </Row>
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
   );
 }
