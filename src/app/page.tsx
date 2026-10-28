@@ -3,6 +3,7 @@ import {
   certifications,
   education,
   leadership,
+  moreProjects,
   profile,
   projects,
   skills,
@@ -128,6 +129,24 @@ export default function Home() {
                 ))}
               </div>
             </article>
+          ))}
+        </div>
+      </section>
+
+      {/* ---- More projects ---------------------------------------------- */}
+      <section className="py-12">
+        <Heading>More projects</Heading>
+        <div className="mt-6 border-t border-line">
+          {moreProjects.map((m) => (
+            <div key={m.title} className="grid gap-1 border-b border-line py-4 sm:grid-cols-[1fr_auto] sm:gap-6">
+              <div>
+                <a href={m.href} target="_blank" rel="noopener noreferrer" className="link inline-flex items-center gap-1 text-[16px] font-medium">
+                  {m.title} <ArrowUpRight size={14} />
+                </a>
+                <p className="mt-1 text-[15px] leading-relaxed text-muted">{m.summary}</p>
+              </div>
+              <p className="text-[13px] text-faint sm:pt-1 sm:text-right">{m.meta}</p>
+            </div>
           ))}
         </div>
       </section>
