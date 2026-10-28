@@ -75,6 +75,16 @@ export const projects: Project[] = [
   },
 ];
 
+/** Smaller projects — on the site only, not the résumé. Newest first. */
+export const moreProjects = [
+  {
+    title: "Real-Time Theft Detection",
+    summary: "Four YOLOv10 models (n, s, m, l) custom-trained to spot theft on CCTV feeds, live or on recorded video.",
+    meta: "2025 · YOLOv10 · Computer vision",
+    href: "https://github.com/Nani2421/REAL-TIME-THEFT-DETECTION",
+  },
+];
+
 /** Newest first. Short and factual. */
 export const updates: { date: string; text: string; tag?: string }[] = [
   { date: "Nov 2026", text: "PingDrop launches on Product Hunt on 3 November.", tag: "Upcoming" },
