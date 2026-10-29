@@ -15,14 +15,14 @@ export default function Backdrop() {
       viewBox="0 0 1440 900"
       preserveAspectRatio="xMidYMid slice"
       fill="none"
-      stroke="#c9cde0"
+      style={{ stroke: "var(--color-art)" }}
       strokeWidth="1.4"
       strokeLinecap="round"
       strokeLinejoin="round"
       opacity="0.75"
     >
       {/* ---- Data points, top left ---- */}
-      <g fill="#c9cde0" stroke="none">
+      <g style={{ fill: "var(--color-art)" }} stroke="none">
         <circle cx="46" cy="60" r="2.5" />
         <circle cx="78" cy="42" r="2" />
         <circle cx="104" cy="74" r="2.5" />
@@ -44,17 +44,17 @@ export default function Backdrop() {
             <path key={`b${y1}-${y2}`} d={`M130 ${y1} L200 ${y2}`} opacity="0.6" />
           )),
         )}
-        {[150, 190, 230].map((y) => <circle key={`n0${y}`} cx="60" cy={y} r="7" fill="#fbfbfd" />)}
-        {[140, 175, 210, 245].map((y) => <circle key={`n1${y}`} cx="130" cy={y} r="7" fill="#fbfbfd" />)}
-        {[170, 215].map((y) => <circle key={`n2${y}`} cx="200" cy={y} r="7" fill="#fbfbfd" />)}
+        {[150, 190, 230].map((y) => <circle key={`n0${y}`} cx="60" cy={y} r="7" style={{ fill: "var(--color-page)" }} />)}
+        {[140, 175, 210, 245].map((y) => <circle key={`n1${y}`} cx="130" cy={y} r="7" style={{ fill: "var(--color-page)" }} />)}
+        {[170, 215].map((y) => <circle key={`n2${y}`} cx="200" cy={y} r="7" style={{ fill: "var(--color-page)" }} />)}
       </g>
 
       {/* ---- Detector: a car with bounding boxes, left ---- */}
       <g>
         <path d="M44 470 L60 440 Q66 430 80 430 L150 430 Q164 430 170 440 L186 470 Z" />
         <rect x="36" y="470" width="158" height="34" rx="8" />
-        <circle cx="70" cy="510" r="11" fill="#fbfbfd" />
-        <circle cx="160" cy="510" r="11" fill="#fbfbfd" />
+        <circle cx="70" cy="510" r="11" style={{ fill: "var(--color-page)" }} />
+        <circle cx="160" cy="510" r="11" style={{ fill: "var(--color-page)" }} />
         <rect x="92" y="480" width="46" height="14" rx="2" />
         {/* vehicle box, dashed, with a label tab */}
         <rect x="26" y="418" width="178" height="110" strokeDasharray="5 5" />
@@ -70,7 +70,7 @@ export default function Backdrop() {
         <path d="M1278 82 L1278 172 L1354 172" opacity="0.7" />
         <path d="M1266 94 L1266 184 L1342 184" opacity="0.5" />
         <path d="M1302 100 H1350 M1302 114 H1350 M1302 128 H1336" />
-        <circle cx="1380" cy="170" r="22" fill="#fbfbfd" />
+        <circle cx="1380" cy="170" r="22" style={{ fill: "var(--color-page)" }} />
         <path d="M1396 186 L1416 206" strokeWidth="3" />
         <path d="M1370 166 H1390 M1370 176 H1384" />
       </g>

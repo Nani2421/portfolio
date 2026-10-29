@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import ProjectPoster from "@/components/ProjectPoster";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { projects } from "@/data/portfolio";
@@ -24,14 +24,7 @@ export default function Projects() {
           return (
             <article key={p.slug} className="grid gap-6 border-t border-line pt-10 md:grid-cols-[1fr_1.1fr] md:gap-10">
               <Link href={`/projects/${p.slug}`} className="block overflow-hidden rounded-sm">
-                <Image
-                  src={`/projects/${p.slug}-light.jpg`}
-                  alt={`${p.title} poster`}
-                  width={1200}
-                  height={900}
-                  sizes="(min-width: 768px) 460px, 100vw"
-                  className="h-auto w-full transition-transform duration-300 hover:scale-[1.02]"
-                />
+                <ProjectPoster slug={p.slug} title={p.title} sizes="(min-width: 768px) 460px, 100vw" className="transition-transform duration-300 hover:scale-[1.02]" />
               </Link>
               <div>
                 <h2 className="text-[24px] font-medium tracking-tight">

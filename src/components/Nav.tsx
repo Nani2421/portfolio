@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Mail } from "lucide-react";
 import { navLinks, profile } from "@/data/portfolio";
 import { Github, Linkedin } from "./BrandIcons";
+import ThemeToggle from "./ThemeToggle";
 
 /**
  * One row: section links on the left, Résumé, then icon links on the right.
@@ -82,7 +83,8 @@ export default function Nav() {
           />
         </nav>
 
-        <div className="hidden shrink-0 items-center gap-4 text-fg sm:flex">
+        <div className="flex shrink-0 items-center gap-4 text-fg">
+          <div className="hidden items-center gap-4 sm:flex">
           <a href={profile.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="opacity-80 hover:opacity-100">
             <Github size={17} />
           </a>
@@ -92,6 +94,8 @@ export default function Nav() {
           <a href={`mailto:${profile.email}`} aria-label="Email" className="opacity-80 hover:opacity-100">
             <Mail size={18} />
           </a>
+          </div>
+          <ThemeToggle />
         </div>
       </div>
     </header>
