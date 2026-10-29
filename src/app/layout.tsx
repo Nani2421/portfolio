@@ -33,7 +33,17 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     // Font variable on <html> so --font-sans in globals.css can resolve it.
-    <html lang="en" className={sans.variable}>
+    // suppressHydrationWarning: the script below sets data-theme before React
+    // hydrates, so this element's attributes legitimately differ from the server's.
+    <html lang="en" className={sans.variable} suppressHydrationWarning>
+      <head>
+        {/* Runs before first paint: a saved choice wins, otherwise the system mode. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var s=localStorage.getItem('theme');var d=s?s==='dark':matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.dataset.theme=d?'dark':'light'}catch(e){document.documentElement.dataset.theme='light'}})()`,
+          }}
+        />
+      </head>
       <body>
         <Backdrop />
         <Nav />

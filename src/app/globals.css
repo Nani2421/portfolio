@@ -1,11 +1,15 @@
 @import "tailwindcss";
 
+/* `dark:` utilities follow data-theme on <html> (set before paint in layout.tsx). */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 /* ============================================================================
    Design system — simple and readable.
 
-   White page, one sans (Geist), dark-grey text, hairline rules and plenty of
-   space. The only decoration is faint line art fixed behind everything
-   (Backdrop.tsx) and on the project panels (ProjectArt.tsx).
+   White page (or near-black in dark mode), one sans (Geist), hairline rules and
+   plenty of space. The only decoration is faint line art fixed behind
+   everything (Backdrop.tsx). Dark mode follows the visitor's system until they
+   use the toggle; every colour below is redefined under [data-theme="dark"].
    ========================================================================= */
 
 @theme {
@@ -15,12 +19,35 @@
   --color-faint: #8a8fa0;
   --color-line: #e9eaf0;
   --color-chip: #f1f2f6;
+  --color-chip-hover: #e5e6ee;
+  /* Cards, form fields and the flow diagram. */
+  --color-surface: #ffffff;
   /* PingDrop indigo — links and the odd accent, nothing else. */
   --color-accent: #4f5bd5;
+  /* Line art: the page backdrop, and the desk drawing in the hero. */
+  --color-art: #c9cde0;
+  --color-hero: #eef0f8;
+  --color-hero-ink: #5b5f8f;
 
   --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
 
   --container-site: 1000px;
+}
+
+[data-theme="dark"] {
+  --color-page: #0f1115;
+  --color-fg: #eceef3;
+  --color-muted: #a3a8b8;
+  --color-faint: #6f7488;
+  --color-line: #23262f;
+  --color-chip: #1b1e26;
+  --color-chip-hover: #252935;
+  --color-surface: #161920;
+  --color-accent: #8f99ff;
+  --color-art: #2a2f3d;
+  --color-hero: #171a24;
+  --color-hero-ink: #9ba2d6;
+  color-scheme: dark;
 }
 
 html {
@@ -62,5 +89,5 @@ body {
   transition: background 0.15s;
 }
 .pill:hover {
-  background: #e5e6ee;
+  background: var(--color-chip-hover);
 }

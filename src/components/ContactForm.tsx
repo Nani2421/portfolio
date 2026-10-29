@@ -10,7 +10,7 @@ import { useState } from "react";
 type State = "idle" | "sending" | "sent" | "error";
 
 const field =
-  "w-full rounded-md border border-line bg-white px-3 py-2.5 text-[15px] outline-none transition-colors placeholder:text-faint focus:border-accent";
+  "w-full rounded-md border border-line bg-surface px-3 py-2.5 text-[15px] outline-none transition-colors placeholder:text-faint focus:border-accent";
 
 export default function ContactForm() {
   const [state, setState] = useState<State>("idle");

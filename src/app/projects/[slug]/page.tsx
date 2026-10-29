@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import ProjectPoster from "@/components/ProjectPoster";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
@@ -70,7 +70,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
       </div>
 
       <div className="mt-10 overflow-hidden rounded-sm">
-        <Image src={`/projects/${cs.slug}-light.jpg`} alt={`${cs.title} poster`} width={1200} height={900} sizes="(min-width: 768px) 768px, 100vw" className="h-auto w-full" priority />
+        <ProjectPoster slug={cs.slug} title={cs.title} sizes="(min-width: 768px) 768px, 100vw" priority />
       </div>
 
       {/* ---- Story ---- */}
@@ -129,7 +129,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
         <Part title="Results">
           <div className="grid gap-3 sm:grid-cols-2">
             {cs.results.map((r) => (
-              <div key={r.label} className="rounded-md border border-line bg-white p-4">
+              <div key={r.label} className="rounded-md border border-line bg-surface p-4">
                 <p className="text-[28px] font-medium tracking-tight">{r.value}</p>
                 <p className="mt-1 text-[14px]">{r.label}</p>
                 {r.note && <p className="mt-1 text-[13px] text-faint">{r.note}</p>}

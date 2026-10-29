@@ -8,7 +8,7 @@ import {
   skills,
   updates,
 } from "@/data/portfolio";
-import Image from "next/image";
+import ProjectPoster from "@/components/ProjectPoster";
 import Link from "next/link";
 
 /** A section heading, the same everywhere. */
@@ -53,13 +53,13 @@ export default function Home() {
         </div>
 
         {/* A drawing in place of a photo: the desk the work happens at. */}
-        <div className="aspect-[4/3] rounded-sm bg-[#eef0f8] p-8">
+        <div className="aspect-[4/3] rounded-sm bg-hero p-8">
           <svg
             aria-hidden="true"
             viewBox="0 0 320 240"
             className="h-full w-full"
             fill="none"
-            stroke="#5b5f8f"
+            style={{ stroke: "var(--color-hero-ink)" }}
             strokeWidth="1.6"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -75,9 +75,9 @@ export default function Home() {
               [124, 142].map((y2) => <path key={`${y}-${y2}`} d={`M130 ${y} L160 ${y2}`} opacity="0.6" />),
             )}
             {[124, 142].map((y) => <path key={`o${y}`} d={`M160 ${y} L190 133`} opacity="0.6" />)}
-            {[116, 133, 150].map((y) => <circle key={`a${y}`} cx="130" cy={y} r="4" fill="#eef0f8" />)}
-            {[124, 142].map((y) => <circle key={`b${y}`} cx="160" cy={y} r="4" fill="#eef0f8" />)}
-            <circle cx="190" cy="133" r="4" fill="#eef0f8" />
+            {[116, 133, 150].map((y) => <circle key={`a${y}`} cx="130" cy={y} r="4" style={{ fill: "var(--color-hero)" }} />)}
+            {[124, 142].map((y) => <circle key={`b${y}`} cx="160" cy={y} r="4" style={{ fill: "var(--color-hero)" }} />)}
+            <circle cx="190" cy="133" r="4" style={{ fill: "var(--color-hero)" }} />
             {/* phone, with signal to the Mac */}
             <rect x="248" y="140" width="30" height="54" rx="7" />
             <path d="M258 146 H268" />
@@ -110,14 +110,7 @@ export default function Home() {
           {projects.map((p) => (
             <article key={p.slug}>
               <Link href={`/projects/${p.slug}`} className="block overflow-hidden rounded-sm">
-                <Image
-                  src={`/projects/${p.slug}-light.jpg`}
-                  alt={`${p.title} poster`}
-                  width={1200}
-                  height={900}
-                  sizes="(min-width: 768px) 480px, 100vw"
-                  className="h-auto w-full transition-transform duration-300 hover:scale-[1.02]"
-                />
+                <ProjectPoster slug={p.slug} title={p.title} sizes="(min-width: 768px) 480px, 100vw" className="transition-transform duration-300 hover:scale-[1.02]" />
               </Link>
               <h3 className="mt-4 text-[18px] font-medium">
                 <Link href={`/projects/${p.slug}`} className="link">

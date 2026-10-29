@@ -8,7 +8,7 @@ import type { DiagramNode } from "@/data/caseStudies";
 export default function FlowDiagram({ nodes, caption }: { nodes: DiagramNode[]; caption: string }) {
   return (
     <figure className="my-8">
-      <ol className="flex flex-col gap-2 rounded-md border border-line bg-white p-5 md:flex-row md:flex-wrap md:items-center md:gap-y-4">
+      <ol className="flex flex-col gap-2 rounded-md border border-line bg-surface p-5 md:flex-row md:flex-wrap md:items-center md:gap-y-4">
         {nodes.map((node, i) => (
           <li key={node.id} className="flex items-center gap-2 md:flex-row">
             <div className="min-w-[150px] rounded-md bg-chip px-3.5 py-2.5">
