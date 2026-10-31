@@ -9,6 +9,7 @@ import {
   updates,
 } from "@/data/portfolio";
 import ProjectPoster from "@/components/ProjectPoster";
+import Image from "next/image";
 import Link from "next/link";
 
 /** A section heading, the same everywhere. */
@@ -52,44 +53,15 @@ export default function Home() {
           </div>
         </div>
 
-        {/* A drawing in place of a photo: the desk the work happens at. */}
-        <div className="aspect-[4/3] rounded-sm bg-hero p-8">
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 320 240"
-            className="h-full w-full"
-            fill="none"
-            style={{ stroke: "var(--color-hero-ink)" }}
-            strokeWidth="1.6"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            opacity="0.85"
-          >
-            {/* desk */}
-            <path d="M20 196 H300 M40 196 V232 M280 196 V232" />
-            {/* Mac with a small network on the screen */}
-            <rect x="96" y="92" width="128" height="84" rx="6" />
-            <rect x="106" y="101" width="108" height="64" rx="2" />
-            <path d="M80 176 H240 L232 186 H88 Z" />
-            {[116, 133, 150].map((y) =>
-              [124, 142].map((y2) => <path key={`${y}-${y2}`} d={`M130 ${y} L160 ${y2}`} opacity="0.6" />),
-            )}
-            {[124, 142].map((y) => <path key={`o${y}`} d={`M160 ${y} L190 133`} opacity="0.6" />)}
-            {[116, 133, 150].map((y) => <circle key={`a${y}`} cx="130" cy={y} r="4" style={{ fill: "var(--color-hero)" }} />)}
-            {[124, 142].map((y) => <circle key={`b${y}`} cx="160" cy={y} r="4" style={{ fill: "var(--color-hero)" }} />)}
-            <circle cx="190" cy="133" r="4" style={{ fill: "var(--color-hero)" }} />
-            {/* phone, with signal to the Mac */}
-            <rect x="248" y="140" width="30" height="54" rx="7" />
-            <path d="M258 146 H268" />
-            <path d="M238 156 Q230 166 238 176 M230 150 Q218 166 230 182" opacity="0.8" />
-            {/* mug */}
-            <path d="M48 166 H72 V190 Q72 194 68 194 H52 Q48 194 48 190 Z M72 172 Q82 172 82 180 Q82 186 72 186" />
-            <path d="M56 156 Q52 150 56 144 M64 156 Q60 150 64 144" opacity="0.6" />
-            {/* lamp */}
-            <path d="M268 196 V88 L236 60" />
-            <path d="M222 48 L250 72 L236 60 Z M220 46 L252 74" />
-          </svg>
-        </div>
+        <Image
+          src="/neeraj.jpg"
+          alt="Neeraj"
+          width={902}
+          height={1200}
+          sizes="(min-width: 768px) 360px, 100vw"
+          priority
+          className="aspect-[4/5] w-full max-w-[360px] rounded-sm object-cover object-[50%_40%] md:justify-self-end"
+        />
       </section>
 
       {/* ---- Projects --------------------------------------------------- */}

@@ -24,10 +24,8 @@
   --color-surface: #ffffff;
   /* PingDrop indigo — links and the odd accent, nothing else. */
   --color-accent: #4f5bd5;
-  /* Line art: the page backdrop, and the desk drawing in the hero. */
+  /* Line art: the page backdrop. */
   --color-art: #c9cde0;
-  --color-hero: #eef0f8;
-  --color-hero-ink: #5b5f8f;
 
   --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
 
@@ -45,8 +43,6 @@
   --color-surface: #161920;
   --color-accent: #8f99ff;
   --color-art: #2a2f3d;
-  --color-hero: #171a24;
-  --color-hero-ink: #9ba2d6;
   color-scheme: dark;
 }
 
