@@ -36,9 +36,8 @@ export default function Home() {
           <h1 className="text-[40px] font-medium tracking-tight">Hi, I’m Neeraj 👋</h1>
           <p className="mt-5 text-[16px] leading-[1.75]">
             I’m a computer science graduate from <b className="font-medium">VIT-AP</b> who’s into{" "}
-            <b className="font-medium">AI and ML</b>: LLMs, AI agents and generative AI. What I enjoy most is
-            turning ideas into real products, from the first sketch to something people download and use every
-            day.
+            <b className="font-medium">AI and ML</b>: LLMs, AI agents and generative AI. I like turning ideas into
+            products, from the first sketch to something people download and use every day.
           </p>
           <p className="mt-4 text-[16px] leading-[1.75]">
             Recently I made an app called{" "}
