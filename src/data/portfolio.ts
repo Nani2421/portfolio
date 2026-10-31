@@ -8,7 +8,7 @@ export const profile = {
   shortName: "Neeraj",
   // Used for search results and link previews.
   description:
-    "Hi, I’m Neeraj — into AI, ML and building things around them: LLMs, RAG, computer vision, and products like PingDrop. Computer science graduate from VIT-AP.",
+    "Hi, I’m Neeraj — a computer science graduate from VIT-AP into AI and ML: LLMs, AI agents and generative AI. Recently I made PingDrop, an app that connects your Mac and Android phone.",
   location: "Amaravati, India",
   email: "srineerajreddyp@gmail.com",
   github: "https://github.com/nani2421",
