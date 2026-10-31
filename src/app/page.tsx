@@ -35,13 +35,17 @@ export default function Home() {
         <div>
           <h1 className="text-[40px] font-medium tracking-tight">Hi, I’m Neeraj 👋</h1>
           <p className="mt-5 text-[16px] leading-[1.75]">
-            I’m into <b className="font-medium">AI, ML</b> and building things around them — LLMs,
-            retrieval-augmented generation and computer vision. I’m a computer science graduate from{" "}
-            <b className="font-medium">VIT-AP</b>, and I like shipping things people actually use, like{" "}
+            I’m a computer science graduate from <b className="font-medium">VIT-AP</b> who’s into{" "}
+            <b className="font-medium">AI and ML</b>: LLMs, AI agents and generative AI. What I enjoy most is
+            turning ideas into real products, from the first sketch to something people download and use every
+            day.
+          </p>
+          <p className="mt-4 text-[16px] leading-[1.75]">
+            Recently I made an app called{" "}
             <a href="https://getpingdrop.vercel.app" target="_blank" rel="noopener noreferrer" className="link">
               PingDrop
-            </a>
-            , which puts your Android phone on your Mac.
+            </a>{" "}
+            that connects your Mac and Android phone.
           </p>
           <div className="mt-7 flex flex-wrap gap-2">
             <Link href="/projects" className="pill">
