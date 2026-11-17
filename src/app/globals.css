@@ -46,6 +46,108 @@
   color-scheme: dark;
 }
 
+/* ============================================================================
+   Backdrop & portrait art — the little sunset world behind the page.
+   Light mode: a warm late-afternoon; dark mode: the same place at night.
+   ========================================================================= */
+
+:root {
+  --art-sun: #f6c47f;
+  --art-cloud: #f1ede2;
+  --art-hill-far: #e0ecd0;
+  --art-hill-mid: #cfe3b8;
+  --art-hill-near: #bcd79e;
+  --art-tree: #a3c784;
+  --art-moon: #cfd6ea;
+  --art-star: #aab3d0;
+}
+
+[data-theme="dark"] {
+  --art-sun: #f6c47f;
+  --art-cloud: #1a1f29;
+  --art-hill-far: #151920;
+  --art-hill-mid: #191e27;
+  --art-hill-near: #1e242f;
+  --art-tree: #242b38;
+}
+
+/* The sun and moon swap places when the theme switches: each spins and fades
+   in or out of the same spot in the sky, and the stars come out at night. */
+.bd-sun,
+.bd-moon {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.bd-stars {
+  transition: opacity 1.2s ease;
+}
+.bd-moon {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.5);
+}
+.bd-stars {
+  opacity: 0;
+}
+[data-theme="dark"] .bd-sun {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.4);
+}
+[data-theme="dark"] .bd-moon {
+  opacity: 1;
+  transform: none;
+}
+[data-theme="dark"] .bd-stars {
+  opacity: 1;
+}
+
+/* Gentle motion: drifting clouds, bobbing birds, slowly turning sun rays. */
+.bd-drift {
+  animation: art-drift 26s ease-in-out infinite;
+}
+.bd-drift-slow {
+  animation: art-drift 40s ease-in-out infinite reverse;
+}
+.bd-bob {
+  animation: art-bob 7s ease-in-out infinite;
+}
+.bd-twinkle {
+  animation: art-twinkle 4s ease-in-out infinite;
+}
+.bd-twinkle-late {
+  animation: art-twinkle 4s ease-in-out 2s infinite;
+}
+.bd-rays {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: art-spin 90s linear infinite;
+}
+
+@keyframes art-drift {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(26px); }
+}
+@keyframes art-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-9px); }
+}
+@keyframes art-twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+@keyframes art-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bd-drift, .bd-drift-slow, .bd-bob, .bd-twinkle, .bd-twinkle-late, .bd-rays {
+    animation: none;
+  }
+  .bd-sun, .bd-moon, .bd-stars {
+    transition: none;
+  }
+}
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 5rem;
