@@ -331,7 +331,7 @@ export const caseStudies: CaseStudy[] = [
         fix: "Per-app filtering, with the filter enforced on the Android side so filtered notifications are never transmitted at all — cheaper on the wire and better for privacy than filtering on receipt.",
       },
     ],
-    next: "Next on the list: the phone's screen on the Mac (reusing the webcam pipeline), camera filters for the webcam, and a wired USB mode for very large files — and the Product Hunt launch on 3 November 2026.",
+    next: "Next on the list: the phone's screen on the Mac (reusing the webcam pipeline), camera filters for the webcam, and a wired USB mode for very large files.",
   },
   {
     slug: "theft",
