@@ -9,6 +9,7 @@ import {
   updates,
 } from "@/data/portfolio";
 import ProjectPoster from "@/components/ProjectPoster";
+import SunMoon from "@/components/SunMoon";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -31,9 +32,14 @@ export default function Home() {
   return (
     <>
       {/* ---- Hello ------------------------------------------------------ */}
-      <section id="home" className="grid items-center gap-12 py-16 md:grid-cols-[1.1fr_1fr] md:py-28">
+      <section
+        id="home"
+        className="relative grid items-center gap-8 pb-12 pt-8 md:grid-cols-[1.1fr_1fr] md:gap-12 md:py-28"
+      >
+        {/* Below xl the page margin is too narrow for Backdrop's sun/moon, so it lives here. */}
+        <SunMoon className="absolute right-0 top-6 -z-10 w-24 md:top-2 xl:hidden" />
         <div>
-          <h1 className="text-[40px] font-medium tracking-tight">Hi, I’m Neeraj 👋</h1>
+          <h1 className="text-[34px] font-medium tracking-tight sm:text-[40px]">Hi, I’m Neeraj 👋</h1>
           <p className="mt-5 text-[16px] leading-[1.75]">
             I’m a computer science graduate from <b className="font-medium">VIT-AP</b> who’s into{" "}
             <b className="font-medium">AI and ML</b>: LLMs, AI agents and generative AI. I like turning ideas into
@@ -61,9 +67,9 @@ export default function Home() {
           alt="Neeraj"
           width={902}
           height={1200}
-          sizes="(min-width: 768px) 360px, 100vw"
+          sizes="(min-width: 768px) 360px, 220px"
           priority
-          className="aspect-[4/5] w-full max-w-[360px] rounded-sm object-cover object-[50%_40%] md:justify-self-end"
+          className="order-first aspect-[4/5] w-full max-w-[220px] rounded-sm object-cover object-[50%_40%] md:order-none md:max-w-[360px] md:justify-self-end"
         />
       </section>
 

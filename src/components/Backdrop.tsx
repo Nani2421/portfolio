@@ -1,45 +1,35 @@
+import SunMoon from "./SunMoon";
+
 /**
- * A faint Ghibli-style landscape fixed behind the whole page — the same world
- * as the hero portrait, drawn in whisper-light page tints so it reads as
- * texture, not a picture. Rolling hills and a low sun along the bottom, puffy
- * clouds and birds up top. The sun and moon share one spot in the sky: when
- * the theme switches, one spins and fades into the other, and the stars come
- * out (bd-sun / bd-moon / bd-stars in globals.css). Clouds drift and birds
- * bob; all motion stops under prefers-reduced-motion.
+ * A faint Ghibli-style landscape fixed behind the whole page, drawn in
+ * whisper-light page tints so it reads as texture, not a picture: rolling
+ * hills and trees along the bottom, puffy clouds and birds up top, stars at
+ * night (bd-stars in globals.css). Clouds drift and birds bob; all motion
+ * stops under prefers-reduced-motion.
+ *
+ * The wide scene is cropped to its middle on a tall phone screen, so phones get
+ * their own lower, narrower scene. The sun/moon lives here in the right margin
+ * only on wide screens; below that the hero shows it (see page.tsx).
  */
 export default function Backdrop() {
   return (
+    <>
+      <WideScene />
+      <PhoneScene />
+      <SunMoon className="fixed right-[2vw] top-20 -z-10 hidden w-[clamp(110px,10vw,170px)] xl:block" />
+    </>
+  );
+}
+
+function WideScene() {
+  return (
     <svg
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 -z-10 h-full w-full"
+      className="pointer-events-none fixed inset-0 -z-10 hidden h-full w-full md:block"
       viewBox="0 0 1440 900"
       preserveAspectRatio="xMidYMid slice"
       fill="none"
     >
-      {/* ---- Sun and moon share the same spot in the sky; the theme switch
-              cross-fades and spins one into the other (bd-sun / bd-moon in
-              globals.css). ---- */}
-      <g className="bd-sun">
-        <circle cx="1250" cy="168" r="78" style={{ fill: "var(--art-sun)" }} opacity="0.16" />
-        <circle cx="1250" cy="168" r="44" style={{ fill: "var(--art-sun)" }} opacity="0.85" />
-        <g
-          className="bd-rays"
-          style={{ stroke: "var(--art-sun)" }}
-          strokeWidth="5"
-          strokeLinecap="round"
-          opacity="0.55"
-        >
-          <path d="M1316 168 L1332 168 M1184 168 L1168 168 M1250 102 L1250 86 M1250 234 L1250 250" />
-          <path d="M1296.7 121.3 L1308 110 M1296.7 214.7 L1308 226 M1203.3 121.3 L1192 110 M1203.3 214.7 L1192 226" />
-        </g>
-      </g>
-      <g className="bd-moon">
-        <path
-          d="M1232 132 a44 44 0 1 0 30 76 a36 36 0 1 1 -30 -76 Z"
-          style={{ fill: "var(--art-moon)" }}
-          opacity="0.8"
-        />
-      </g>
       <g className="bd-stars">
         <g style={{ fill: "var(--art-star)" }} className="bd-twinkle">
           <circle cx="160" cy="90" r="2" />
@@ -105,6 +95,70 @@ export default function Backdrop() {
         <circle cx="1328" cy="786" r="20" />
         <circle cx="1312" cy="797" r="14" />
         <circle cx="1344" cy="796" r="14" />
+      </g>
+    </svg>
+  );
+}
+
+/** The same world redrawn for a tall phone screen, pinned to the bottom edge. */
+function PhoneScene() {
+  return (
+    <svg
+      aria-hidden="true"
+      className="pointer-events-none fixed inset-0 -z-10 h-full w-full md:hidden"
+      viewBox="0 0 390 844"
+      preserveAspectRatio="xMidYMax slice"
+      fill="none"
+    >
+      <g className="bd-stars">
+        <g style={{ fill: "var(--art-star)" }} className="bd-twinkle">
+          <circle cx="40" cy="120" r="1.6" />
+          <circle cx="180" cy="90" r="1.4" />
+          <circle cx="250" cy="300" r="1.6" />
+          <circle cx="30" cy="420" r="1.4" />
+          <circle cx="370" cy="520" r="1.6" />
+        </g>
+        <g style={{ fill: "var(--art-star)" }} className="bd-twinkle-late">
+          <circle cx="120" cy="230" r="1.4" />
+          <circle cx="300" cy="210" r="1.6" />
+          <circle cx="360" cy="380" r="1.4" />
+          <circle cx="80" cy="560" r="1.6" />
+        </g>
+      </g>
+
+      <g style={{ fill: "var(--art-cloud)" }} className="bd-drift">
+        <path
+          transform="translate(236 90)"
+          d="M14 96 Q20 80 38 82 Q44 66 64 70 Q82 64 88 80 Q104 81 100 96 Q94 103 76 101 L30 101 Q16 104 14 96 Z"
+        />
+      </g>
+      <g style={{ fill: "var(--art-cloud)" }} className="bd-drift-slow">
+        <path d="M282 470 Q287 458 301 460 Q306 448 321 451 Q335 447 340 459 Q352 460 349 471 Q344 477 330 475 L294 475 Q284 478 282 470 Z" opacity="0.8" />
+      </g>
+
+      <g style={{ stroke: "var(--color-art)" }} strokeWidth="2" strokeLinecap="round" className="bd-bob">
+        <path d="M40 300 q6 -7 12 0 M52 300 q6 -7 12 0" />
+      </g>
+
+      <path
+        d="M0 748 Q70 706 150 734 T 300 726 Q350 710 390 728 L390 844 L0 844 Z"
+        style={{ fill: "var(--art-hill-far)" }}
+      />
+      <path
+        d="M0 784 Q110 748 220 774 T 390 770 L390 844 L0 844 Z"
+        style={{ fill: "var(--art-hill-mid)" }}
+      />
+      <path d="M0 818 Q160 794 300 812 T 390 808 L390 844 L0 844 Z" style={{ fill: "var(--art-hill-near)" }} />
+
+      <g style={{ fill: "var(--art-tree)" }}>
+        <path d="M34 778 L35 756" style={{ stroke: "var(--art-tree)" }} strokeWidth="3" strokeLinecap="round" />
+        <circle cx="35" cy="746" r="14" />
+        <circle cx="25" cy="754" r="10" />
+        <circle cx="45" cy="753" r="10" />
+        <path d="M352 772 L353 754" style={{ stroke: "var(--art-tree)" }} strokeWidth="2.5" strokeLinecap="round" />
+        <circle cx="353" cy="746" r="11" />
+        <circle cx="345" cy="752" r="8" />
+        <circle cx="361" cy="751" r="8" />
       </g>
     </svg>
   );

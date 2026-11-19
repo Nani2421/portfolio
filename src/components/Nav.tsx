@@ -12,7 +12,8 @@ import ThemeToggle from "./ThemeToggle";
  * One row: section links on the left, Résumé, then icon links on the right.
  * It stays at the top while scrolling, and the blue dot slides under the link
  * for whichever home-page section is in view — or under Projects on the
- * project pages. On phones the links scroll sideways.
+ * project pages. On phones Résumé drops out of the row (it is in the hero and
+ * footer) so the rest fit.
  */
 
 export default function Nav() {
@@ -54,8 +55,8 @@ export default function Nav() {
 
   return (
     <header className="sticky top-0 z-50 bg-page/90 backdrop-blur-sm">
-      <div className="mx-auto flex h-16 max-w-site items-center justify-between gap-6 px-5">
-        <nav className="relative -mx-1 flex items-center gap-1 overflow-x-auto text-[15px] sm:gap-4">
+      <div className="mx-auto flex h-16 max-w-site items-center justify-between gap-3 px-5 sm:gap-6">
+        <nav className="relative -mx-1 flex items-center gap-0.5 overflow-x-auto text-[14px] sm:gap-4 sm:text-[15px]">
           {navLinks.map((l) => (
             <Link
               key={l.href}
@@ -72,7 +73,7 @@ export default function Nav() {
             href={profile.resumeUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="shrink-0 px-1 py-2 text-muted transition-colors hover:text-fg"
+            className="hidden shrink-0 px-1 py-2 text-muted transition-colors hover:text-fg sm:block"
           >
             Résumé
           </a>

@@ -90,7 +90,8 @@ export const projects: Project[] = [
 
 /** Newest first. Short and factual. */
 export const updates: { date: string; text: string; tag?: string }[] = [
-  { date: "Nov 2026", text: "PingDrop launches on Product Hunt on 3 November.", tag: "Upcoming" },
+  { date: "Nov 2026", text: "Trying out a few other app ideas on the side.", tag: "Ongoing" },
+  { date: "Nov 2026", text: "Launched PingDrop on Product Hunt." },
   { date: "Oct 2026", text: "Released PingDrop 1.5 on Google Play and for Mac — walk-away lock, calls with any phone app, a desktop widget and Siri." },
   { date: "Aug 2026", text: "Built PolicyMind AI, a RAG assistant that cites the exact page it answers from." },
   { date: "Jun 2026", text: "Finished my B.Tech in Computer Science and Engineering at VIT-AP with a CGPA of 8.8." },
